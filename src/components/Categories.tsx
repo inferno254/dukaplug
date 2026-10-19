@@ -11,16 +11,14 @@ export default function Categories({ openCategory }: { openCategory: (type: 'foo
   const [active, setActive] = useState<keyof typeof categoryGroups>("groceries");
   const labels = { food: "Food", groceries: "Fresh groceries", shopping: "Everyday shopping" };
 
-  const cat = t('home').categories;
-
   return (
     <section className="section category-section">
       <div className="section-head category-heading">
         <div>
-          <span className="kicker">{cat.kicker}</span>
-          <h2>{cat.title}</h2>
+          <span className="kicker">{t('home.categories.kicker')}</span>
+          <h2>{t('home.categories.title')}</h2>
         </div>
-        <p>{cat.copy}</p>
+        <p>{t('home.categories.copy')}</p>
       </div>
       <div className="category-tabs">
         {(Object.keys(categoryGroups) as (keyof typeof categoryGroups)[]).map((key) => (
@@ -42,7 +40,7 @@ export default function Categories({ openCategory }: { openCategory: (type: 'foo
           </button>
         ))}
       </div>
-      <p className="price-note">{cat.note}</p>
+      <p className="price-note">{t('home.categories.note')}</p>
     </section>
   );
 }

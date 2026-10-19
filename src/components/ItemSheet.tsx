@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Icon from '@/components/ui/Icon';
 import Button from '@/components/ui/Button';
-import { useAppContext } from '@/context/AppContext';
+import { photos } from '@/data/products';
 
 interface ItemSheetProps {
   close: () => void;
@@ -12,7 +12,6 @@ interface ItemSheetProps {
 
 export default function ItemSheet({ close, add }: ItemSheetProps) {
   const [quantity, setQuantity] = useState(1);
-  const { photos } = useAppContext();
 
   const handleSize = (size: string) => {
     // In a real app, this would update selected size

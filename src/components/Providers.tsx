@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/context/ThemeContext';
 import { AppProvider } from '@/context/AppContext';
 import { CartProvider } from '@/context/CartContext';
 import { LanguageProvider } from '@/context/LanguageContext';
+import { AuthProvider } from '@/context/AuthContext';
 import { ReactNode } from 'react';
 
 type ProvidersProps = {
@@ -17,7 +18,9 @@ export default function Providers({ children }: ProvidersProps) {
       <AppProvider>
         <CartProvider>
           <LanguageProvider>
-            {children}
+            <AuthProvider>
+              {children}
+            </AuthProvider>
           </LanguageProvider>
         </CartProvider>
       </AppProvider>

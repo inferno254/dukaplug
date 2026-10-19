@@ -76,14 +76,14 @@ export default function CartSidebar() {
                     <p className="cart-item-price">KES {item.product.price}</p>
                     <div className="cart-item-controls">
                       <button 
-                        onClick={() => updateQuantity(item.product.id, Math.max(1, item.quantity - 1))}
+                        onClick={() => updateQuantity(item.product, Math.max(1, item.quantity - 1))}
                         className="qty-btn"
                       >
                         <Icon name="minus" size={16} />
                       </button>
                       <span>{item.quantity}</span>
                       <button 
-                        onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                        onClick={() => updateQuantity(item.product, item.quantity + 1)}
                         className="qty-btn"
                       >
                         <Icon name="plus" size={16} />
@@ -91,7 +91,7 @@ export default function CartSidebar() {
                     </div>
                   </div>
                   <button 
-                    onClick={() => removeItem(item.product.id)}
+                    onClick={() => removeItem(item.product)}
                     className="remove-item"
                   >
                     <Icon name="check" size={16} />

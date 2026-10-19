@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Bricolage_Grotesque, DM_Sans } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 import Providers from '@/components/Providers';
 
@@ -41,6 +42,7 @@ export default function RootLayout({
     <html lang="en" className={`${bricolage.variable} ${dmSans.variable}`}>
       <body className="font-sans antialiased">
         <Providers>{children}</Providers>
+        <Analytics />
       </body>
     </html>
   );

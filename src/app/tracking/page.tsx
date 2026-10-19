@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { useAppContext } from '@/context/AppContext';
 import TrackingContent from '@/components/pages/TrackingContent';

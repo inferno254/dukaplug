@@ -19,6 +19,21 @@ export const shoppingItems = [
   { name: "Cooking oil · 1 litre", desc: "Pure vegetable cooking oil", price: 340, image: "https://images.unsplash.com/photo-1552592074-ea7a91b851b3?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=900" },
 ];
 
+export type Product = {
+  name: string;
+  desc: string;
+  price: number;
+  image: string;
+};
+
+export const allProducts: Product[] = [
+  ...menuItems,
+  ...groceryItems,
+  ...shoppingItems,
+];
+
+export const PRODUCTS = allProducts;
+
 export const categoryGroups = {
   food: [
     ["Fast food", "burger", "From KES 250"], 

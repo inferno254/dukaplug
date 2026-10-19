@@ -61,7 +61,6 @@ export default function ShopPageContent({ go, cartCount }: { go: (p: string) => 
 
   return (
     <>
-      <Header page="shop" />
       <main className="page-shell">
         <div className="browse-switch">
           {(["food", "groceries", "shopping"] as const).map((item) => (

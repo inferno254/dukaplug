@@ -7,41 +7,40 @@ import Logo from '@/components/ui/Logo';
 export default function Footer() {
   const { t } = useLanguage();
   const { go } = useAppContext();
-  const footer = t('footer');
 
   return (
     <footer>
       <div className="footer-top">
         <Logo />
-        <h2>{footer.title}</h2>
+        <h2>{t('footer.title')}</h2>
       </div>
       <div className="footer-grid">
         <div>
-          <p>{footer.copy}</p>
-          <span>{footer.motto}</span>
+          <p>{t('footer.copy')}</p>
+          <span>{t('footer.motto')}</span>
         </div>
         <div>
-          <b>Explore</b>
-          <button onClick={() => go('shop')}>Food & shops</button>
-          <button onClick={() => go('checkout')}>Checkout</button>
-          <button onClick={() => go('tracking')}>Track order</button>
+          <b>{t('footer.explore')}</b>
+          <button onClick={() => go('shop')}>{t('footer.foodShops')}</button>
+          <button onClick={() => go('checkout')}>{t('footer.checkoutLink')}</button>
+          <button onClick={() => go('tracking')}>{t('footer.trackOrder')}</button>
         </div>
         <div>
-          <b>Partner</b>
-          <button onClick={() => go('vendor')}>Sell on DukaPlug</button>
-          <button>Become a rider</button>
-          <button>Business support</button>
+          <b>{t('footer.partner')}</b>
+          <button onClick={() => go('vendor')}>{t('footer.sellOn')}</button>
+          <button>{t('footer.becomeRider')}</button>
+          <button>{t('footer.businessSupport')}</button>
         </div>
         <div>
-          <b>Need help?</b>
-          <button>Help centre</button>
-          <button>hello@dukaplug.co.ke</button>
-          <button>+254 700 DUKA</button>
+          <b>{t('footer.help')}</b>
+          <button>{t('footer.helpCenter')}</button>
+          <button>{t('footer.email')}</button>
+          <button>{t('footer.phone')}</button>
         </div>
       </div>
       <div className="footer-bottom">
-        <span>{footer.copyright}</span>
-        <span>{footer.madeBy}</span>
+        <span>{t('footer.copyright')}</span>
+        <span>{t('footer.madeBy')}</span>
       </div>
     </footer>
   );

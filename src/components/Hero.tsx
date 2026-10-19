@@ -11,12 +11,11 @@ import Logo from '@/components/ui/Logo';
 export default function Hero({ go }: { go: (p: string) => void }) {
   const [slide, setSlide] = useState(0);
   const { t } = useLanguage();
-  const hero = t('hero');
 
   const slides = [
-    { mode: "bag", eyebrow: hero.bag.eyebrow, title: hero.bag.title, copy: hero.bag.copy, cta: hero.bag.cta },
-    { mode: "burst", eyebrow: hero.burst.eyebrow, title: hero.burst.title, copy: hero.burst.copy, cta: hero.burst.cta },
-    { mode: "phone", eyebrow: hero.phone.eyebrow, title: hero.phone.title, copy: hero.phone.copy, cta: hero.phone.cta },
+    { mode: "bag", eyebrow: t('hero.bag.eyebrow'), title: t('hero.bag.title'), copy: t('hero.bag.copy'), cta: t('hero.bag.cta') },
+    { mode: "burst", eyebrow: t('hero.burst.eyebrow'), title: t('hero.burst.title'), copy: t('hero.burst.copy'), cta: t('hero.burst.cta') },
+    { mode: "phone", eyebrow: t('hero.phone.eyebrow'), title: t('hero.phone.title'), copy: t('hero.phone.copy'), cta: t('hero.phone.cta') },
   ];
 
   useEffect(() => {
@@ -36,7 +35,7 @@ export default function Hero({ go }: { go: (p: string) => void }) {
           <Button variant="yellow" onClick={() => go('/shop')} icon="arrow">
             {current.cta}
           </Button>
-          <span className="hero-note"><b>4.9</b><Icon name="star" size={16} /> {hero.loved}</span>
+          <span className="hero-note"><b>4.9</b><Icon name="star" size={16} /> {t('hero.loved')}</span>
         </div>
         <div className="slide-dots">
           {slides.map((_, i) => (
@@ -62,7 +61,7 @@ export default function Hero({ go }: { go: (p: string) => void }) {
           <b>Order confirmed!</b>
           <small>Your plug is on the way.</small>
         </div>
-        <div className="hero-sticker">{hero.sticker}</div>
+        <div className="hero-sticker">{t('hero.sticker')}</div>
       </div>
     </section>
   );

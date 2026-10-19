@@ -13,17 +13,16 @@ const shops = [
 
 export default function Popular({ go }: { go: (p: string) => void }) {
   const { t } = useLanguage();
-  const popular = t('home').popular;
 
   return (
     <section className="section">
       <div className="section-head">
         <div>
-          <span className="kicker">{popular.kicker}</span>
-          <h2>{popular.title}</h2>
+          <span className="kicker">{t('home.popular.kicker')}</span>
+          <h2>{t('home.popular.title')}</h2>
         </div>
         <button className="text-link" onClick={() => go('/shop')}>
-          {popular.seeAll} <Icon name="arrow" />
+          {t('home.popular.seeAll')} <Icon name="arrow" />
         </button>
       </div>
       <div className="shop-grid">

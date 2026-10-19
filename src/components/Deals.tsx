@@ -4,22 +4,21 @@ import { useLanguage } from '@/context/LanguageContext';
 
 export default function Deals() {
   const { t } = useLanguage();
-  const deals = t('home').deals;
 
   return (
     <section className="deals">
       <div>
-        <span className="kicker dark-kicker">{deals.kicker}</span>
-        <h2>{deals.title}</h2>
+        <span className="kicker dark-kicker">{t('home.deals.kicker')}</span>
+        <h2>{t('home.deals.title')}</h2>
       </div>
       <div className="ticket">
-        <span>{deals.off}</span>
-        <b>{deals.first}</b>
+        <span>{t('home.deals.off')}</span>
+        <b>{t('home.deals.first')}</b>
         <small>Use code: <strong>DUKA20</strong></small>
       </div>
       <div className="ticket alt">
-        <span>{deals.free}</span>
-        <b>{deals.lunch}</b>
+        <span>{t('home.deals.free')}</span>
+        <b>{t('home.deals.lunch')}</b>
         <small>12–2pm · Selected spots</small>
       </div>
     </section>

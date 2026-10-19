@@ -7,14 +7,13 @@ import Logo from '@/components/ui/Logo';
 
 export default function AppStrip() {
   const { t } = useLanguage();
-  const app = t('home').app;
 
   return (
     <section className="app-strip">
       <div>
-        <span className="kicker">{app.kicker}</span>
-        <h2>{app.title}</h2>
-        <p>{app.copy}</p>
+        <span className="kicker">{t('home.app.kicker')}</span>
+        <h2>{t('home.app.title')}</h2>
+        <p>{t('home.app.copy')}</p>
         <div className="store-badges">
           <button>Download on the<br /><b>App Store</b></button>
           <button>GET IT ON<br /><b>Google Play</b></button>
@@ -22,12 +21,12 @@ export default function AppStrip() {
       </div>
       <div className="app-phone">
         <Logo />
-        <div className="app-greeting">{app.greeting}</div>
+        <div className="app-greeting">{t('home.app.greeting')}</div>
         <div className="app-order">
           <span><Icon name="bike" /></span>
           <div>
-            <b>{app.order}</b>
-            <small>{app.status}</small>
+            <b>{t('home.app.order')}</b>
+            <small>{t('home.app.status')}</small>
           </div>
         </div>
       </div>

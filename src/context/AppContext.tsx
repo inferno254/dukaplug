@@ -52,7 +52,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const [browseType, setBrowseType] = useState<BrowseType>('food');
   const [cartCount, setCartCount] = useState<number>(2);
-  const [location, setLocation] = useState<DeliveryLocation>({ name: 'Home · Rongai', detail: 'Maasai Lodge Road, Ongata Rongai' });
+  const [location, setLocation] = useState<DeliveryLocation>({ name: 'HQ · Kitui', detail: 'DukaPlug HQ, Top Notch, Kitui' });
   const [showLocation, setShowLocation] = useState<boolean>(false);
   const [sheet, setSheet] = useState<boolean>(false);
 
@@ -107,12 +107,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
         showLocation,
         sheet,
         deliveryAreas: [
-          { name: 'Home · Rongai', detail: 'Maasai Lodge Road, Ongata Rongai' },
-          { name: 'Multimedia University', detail: 'Magadi Road, Nairobi' },
-          { name: 'Karen', detail: 'Karen Shopping Centre, Nairobi' },
-          { name: 'Lang\'ata', detail: 'Lang\'ata Road, Nairobi' },
-          { name: 'Kiserian', detail: 'Kiserian Town, Kajiado' },
-          { name: 'Kitengela', detail: 'Namanga Road, Kitengela' },
+          { name: 'HQ · Kitui', detail: 'DukaPlug HQ, Top Notch, Kitui' },
+          { name: 'Kitui Town', detail: 'Central Business District, Kitui' },
+          { name: 'Mwingi', detail: 'Mwingi Central, Kitui County' },
+          { name: 'Mutomo', detail: 'Mutomo Market, Kitui County' },
+          { name: 'Kibwezi', detail: 'Kibwezi Town, Makueni' },
+          { name: 'Mombasa Road', detail: 'Athi River, Machakos' },
         ],
         go,
         openCategory,

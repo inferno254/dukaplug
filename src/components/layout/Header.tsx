@@ -39,9 +39,9 @@ export default function Header() {
           <Icon name="cart" />
           <span>{cartCount}</span>
         </button>
-        <button className="login-button" onClick={() => go('profile')}>
+        <a className="login-button" href="/login">
           Log in
-        </button>
+        </a>
         <ThemeToggle />
         <LanguageToggle />
       </nav>

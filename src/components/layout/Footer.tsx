@@ -12,12 +12,12 @@ export default function Footer() {
     <footer>
       <div className="footer-top">
         <Logo />
-        <h2>{t('footer.title')}</h2>
+        <h2 dangerouslySetInnerHTML={{ __html: t('footer.title') }} />
       </div>
       <div className="footer-grid">
         <div>
-          <p>{t('footer.copy')}</p>
-          <span>{t('footer.motto')}</span>
+          <p dangerouslySetInnerHTML={{ __html: t('footer.copy') }} />
+          <span dangerouslySetInnerHTML={{ __html: t('footer.motto') }} />
         </div>
         <div>
           <b>{t('footer.explore')}</b>
@@ -40,7 +40,7 @@ export default function Footer() {
       </div>
       <div className="footer-bottom">
         <span>{t('footer.copyright')}</span>
-        <span>{t('footer.madeBy')}</span>
+        <span dangerouslySetInnerHTML={{ __html: t('footer.madeBy') }} />
       </div>
     </footer>
   );

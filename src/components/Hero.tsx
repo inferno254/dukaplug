@@ -29,7 +29,7 @@ export default function Hero({ go }: { go: (p: string) => void }) {
     <section className={`hero hero-${current.mode}`}>
       <div className="hero-copy">
         <span className="eyebrow">{current.eyebrow}</span>
-        <h1>{current.title}</h1>
+        <h1 dangerouslySetInnerHTML={{ __html: current.title }} />
         <p>{current.copy}</p>
         <div className="hero-actions">
           <Button variant="yellow" onClick={() => go('/shop')} icon="arrow">

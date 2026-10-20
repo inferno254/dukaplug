@@ -8,6 +8,8 @@ interface ButtonProps {
   onClick?: () => void;
   icon?: string;
   className?: string;
+  type?: 'button' | 'submit' | 'reset';
+  disabled?: boolean;
 }
 
 export default function Button({ 
@@ -15,12 +17,16 @@ export default function Button({
   variant = 'green', 
   onClick, 
   icon, 
-  className = '' 
+  className = '',
+  type = 'button',
+  disabled = false
 }: ButtonProps) {
   return (
     <button 
       className={`btn btn-${variant} ${className}`.trim()}
       onClick={onClick}
+      type={type}
+      disabled={disabled}
     >
       {children}
       {icon && <Icon name={icon} />}

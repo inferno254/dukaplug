@@ -1,18 +1,51 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Icon from '@/components/ui/Icon';
 import ShopCard from '@/components/ShopCard';
 import { useLanguage } from '@/context/LanguageContext';
-import { useAppContext } from '@/context/AppContext';
 
-const shops = [
-  { name: "Mama Njeri's Kitchen", type: "Kenyan · Local favourites", time: "15–25 min", fee: "Free delivery", image: "https://images.unsplash.com/photo-1600891964092-4316c288032e?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=1200", badge: "Top rated" },
-  { name: "Fresh Basket Rongai", type: "Groceries · Fresh produce", time: "20–30 min", fee: "KES 49", image: "https://images.unsplash.com/photo-1768119901638-75c6edd64c0b?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=1200", badge: "Open now" },
-  { name: "The Daily Feast", type: "African · Grills · Bowls", time: "25–35 min", fee: "KES 69", image: "https://images.unsplash.com/photo-1738291422837-85761f82a10e?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=1200", badge: "Popular" },
-];
+interface Vendor {
+  id: string;
+  name: string;
+  phone: string | null;
+  email: string | null;
+  location: string | null;
+  is_verified: boolean;
+  rating: number;
+  created_at: string;
+}
 
 export default function Popular({ go }: { go: (p: string) => void }) {
   const { t } = useLanguage();
+  const [vendors, setVendors] = useState<Vendor[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/vendors')
+      .then((r) => r.json())
+      .then((data) => {
+        setVendors(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="section">
+        <div className="section-head">
+          <div>
+            <span className="kicker">{t('home.popular.kicker')}</span>
+            <h2>{t('home.popular.title')}</h2>
+          </div>
+        </div>
+        <div className="shop-grid">
+          <p>Loading vendors...</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="section">
@@ -26,8 +59,19 @@ export default function Popular({ go }: { go: (p: string) => void }) {
         </button>
       </div>
       <div className="shop-grid">
-        {shops.map((shop) => (
-          <ShopCard key={shop.name} shop={shop} go={go} />
+        {vendors.map((vendor) => (
+          <ShopCard
+            key={vendor.id}
+            shop={{
+              name: vendor.name,
+              type: vendor.location || 'Local',
+              time: '15–25 min',
+              fee: 'Free delivery',
+              image: 'https://images.unsplash.com/photo-1600891964092-4316c288032e?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=1200',
+              badge: vendor.rating >= 4.8 ? 'Top rated' : 'Popular',
+            }}
+            go={go}
+          />
         ))}
       </div>
     </section>

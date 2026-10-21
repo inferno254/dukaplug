@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, ReactNode, useCallback } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import { useCartContext } from '@/context/CartContext';
 
 type Page = 'home' | 'shop' | 'checkout' | 'tracking' | 'vendor' | 'profile';
 type BrowseType = 'food' | 'groceries' | 'shopping';
@@ -49,9 +50,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const page = pageFromPath(pathname);
+  const { cartCount } = useCartContext();
 
   const [browseType, setBrowseType] = useState<BrowseType>('food');
-  const [cartCount, setCartCount] = useState<number>(2);
   const [location, setLocation] = useState<DeliveryLocation>({ name: 'HQ · Kitui', detail: 'DukaPlug HQ, Top Notch, Kitui' });
   const [showLocation, setShowLocation] = useState<boolean>(false);
   const [sheet, setSheet] = useState<boolean>(false);
@@ -81,7 +82,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const openItem = () => setSheet(true);
   const closeSheet = () => setSheet(false);
   const addItem = () => {
-    setCartCount((c) => c + 1);
     setSheet(false);
   };
   const openLocation = () => setShowLocation(true);
@@ -101,7 +101,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         browseType,
         setBrowseType,
         cartCount,
-        setCartCount,
+        setCartCount: () => {},
         location,
         setLocation,
         showLocation,

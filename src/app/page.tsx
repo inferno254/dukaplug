@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { LanguageProvider } from '@/context/LanguageContext';
 import RootShell from '@/components/layout/AppShell';
 import Hero from '@/components/Hero';
@@ -10,16 +11,20 @@ import Deals from '@/components/Deals';
 import HowItWorks from '@/components/HowItWorks';
 import PartnerBanners from '@/components/PartnerBanners';
 import AppStrip from '@/components/AppStrip';
-import { menuItems } from '@/data/products';
 import ProductCard from '@/components/ProductCard';
 import { useAppContext } from '@/context/AppContext';
 import { useCartContext } from '@/context/CartContext';
+import { useProducts } from '@/hooks/useProducts';
 import Icon from '@/components/ui/Icon';
 import Button from '@/components/ui/Button';
 
 export default function HomePage() {
   const { go, openCategory } = useAppContext();
   const { addItem } = useCartContext();
+  const { products } = useProducts();
+
+  const foodProducts = products.filter((p) => p.category === 'food');
+  const quickReorder = foodProducts.slice(0, 3);
 
   return (
     <LanguageProvider>
@@ -43,8 +48,18 @@ export default function HomePage() {
               </div>
             </div>
             <div className="product-grid">
-              {menuItems.slice(0, 3).map((item) => (
-                <ProductCard key={item.name} item={item} onAdd={() => addItem(item)} />
+              {quickReorder.map((item) => (
+                <ProductCard
+                  key={item.id}
+                  item={{
+                    id: item.id,
+                    name: item.name,
+                    desc: item.description || '',
+                    price: item.price,
+                    image: item.image_url || 'https://images.unsplash.com/photo-1726177974666-88e937fa8e59?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=1200',
+                  }}
+                  onAdd={() => addItem(item)}
+                />
               ))}
             </div>
           </section>

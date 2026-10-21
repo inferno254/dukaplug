@@ -1,11 +1,72 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useAppContext } from '@/context/AppContext';
+import { useAuth } from '@/context/AuthContext';
 import FoodGlyph from '@/components/FoodGlyph';
 import Icon from '@/components/ui/Icon';
 import Button from '@/components/ui/Button';
 
+interface RiderTracking {
+  id: string;
+  order_id: string;
+  rider_name: string | null;
+  rider_phone: string | null;
+  rider_rating: number | null;
+  current_lat: number | null;
+  current_lng: number | null;
+  eta_minutes: number | null;
+  status: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export default function TrackingContent({ go }: { go: (p: string) => void }) {
+  const { user } = useAuth();
+  const [tracking, setTracking] = useState<RiderTracking | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
+    fetch('/api/orders/active')
+      .then((r) => r.json())
+      .then((data) => {
+        setTracking(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [user]);
+
+  if (loading) {
+    return (
+      <main className="tracking-page">
+        <p>Loading tracking...</p>
+      </main>
+    );
+  }
+
+  if (!tracking) {
+    return (
+      <main className="tracking-page">
+        <div className="empty-state">
+          <p>No active orders to track.</p>
+          <Button variant="yellow" onClick={() => go('/')}>
+            Browse shops
+          </Button>
+        </div>
+      </main>
+    );
+  }
+
+  const eta = tracking.eta_minutes || 24;
+  const riderName = tracking.rider_name || 'John M.';
+  const riderRating = tracking.rider_rating || 4.9;
+  const status = tracking.status;
+
   return (
     <main className="tracking-page">
       <section className="map">
@@ -24,12 +85,12 @@ export default function TrackingContent({ go }: { go: (p: string) => void }) {
         <div className="rider-dot">
           <Icon name="bike" />
         </div>
-        <button className="back-float" onClick={() => go('/')} >←</button>
+        <button className="back-float" onClick={() => go('/')}>←</button>
       </section>
       <aside className="tracking-panel">
         <span className="live-pill"><i /> LIVE ORDER</span>
-        <h1>24 <small>min</small></h1>
-        <p>Estimated arrival · 1:42 PM</p>
+        <h1>{eta} <small>min</small></h1>
+        <p>Estimated arrival · {new Date(Date.now() + eta * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
         <div className="progress-list">
           <div className="done">
             <span><Icon name="check" size={15} /></span>
@@ -38,21 +99,21 @@ export default function TrackingContent({ go }: { go: (p: string) => void }) {
               <small>12:58 PM</small>
             </div>
           </div>
-          <div className="done">
+          <div className={status === 'preparing' ? 'done' : 'done'}>
             <span><Icon name="check" size={15} /></span>
             <div>
               <b>Preparing your order</b>
               <small>Mama Njeri's is cooking</small>
             </div>
           </div>
-          <div className="active">
+          <div className={status === 'on_the_way' || status === 'accepted' ? 'active' : 'done'}>
             <span><Icon name="bike" size={17} /></span>
             <div>
               <b>On the way</b>
-              <small>John picked up your order</small>
+              <small>{riderName} picked up your order</small>
             </div>
           </div>
-          <div>
+          <div className={status === 'delivered' ? 'done' : ''}>
             <span />
             <div>
               <b>Delivered</b>
@@ -61,16 +122,16 @@ export default function TrackingContent({ go }: { go: (p: string) => void }) {
           </div>
         </div>
         <div className="rider-card">
-          <div className="avatar">JM</div>
+          <div className="avatar">{riderName.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase()}</div>
           <span>
-            <b>John M.</b>
-            <small>4.9 rating · 320 deliveries</small>
+            <b>{riderName}</b>
+            <small>{riderRating} rating · 320 deliveries</small>
           </span>
           <button><Icon name="phone" /></button>
           <button><Icon name="chat" /></button>
         </div>
         <div className="tracking-order">
-          <span>Order #DP2408</span>
+          <span>Order #{tracking.order_id.slice(0, 8).toUpperCase()}</span>
           <button>View receipt</button>
         </div>
       </aside>

@@ -15,15 +15,15 @@ type ProvidersProps = {
 export default function Providers({ children }: ProvidersProps) {
   return (
     <ThemeProvider>
-      <AppProvider>
-        <CartProvider>
+      <CartProvider>
+        <AppProvider>
           <LanguageProvider>
             <AuthProvider>
               {children}
             </AuthProvider>
           </LanguageProvider>
-        </CartProvider>
-      </AppProvider>
+        </AppProvider>
+      </CartProvider>
     </ThemeProvider>
   );
 }

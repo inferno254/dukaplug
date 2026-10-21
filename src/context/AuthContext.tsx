@@ -1,56 +1,127 @@
 // src/context/AuthContext.tsx
-"use client";
+'use client';
 
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { useRouter } from "next/navigation";
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
 
-type User = {
+export type User = {
+  id: string;
   name: string;
-  email: string;
+  email: string | null;
+  phone: string | null;
 };
 
 type AuthContextType = {
   user: User | null;
-  login: (email: string, password: string) => void;
-  logout: () => void;
+  login: (email: string, password: string) => Promise<{ error?: string }>;
+  signup: (name: string, email: string, password: string) => Promise<{ error?: string }>;
+  logout: () => Promise<void>;
+  loading: boolean;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // Load persisted user on mount
   useEffect(() => {
-    const stored = localStorage.getItem("authUser");
+    // Check for existing session
+    const stored = localStorage.getItem('authUser');
     if (stored) {
-      setUser(JSON.parse(stored));
+      try {
+        const parsed = JSON.parse(stored);
+        setUser(parsed);
+      } catch {
+        localStorage.removeItem('authUser');
+      }
     }
+    setLoading(false);
   }, []);
 
-  const login = (email: string, password: string) => {
-    // Demo credentials – match login page logic
-    const DEMO_EMAIL = "erick@example.com";
-    const DEMO_PASS = "erick123";
-    if (email === DEMO_EMAIL && password === DEMO_PASS) {
-      const demoUser: User = { name: "Erick Neko", email: DEMO_EMAIL };
-      setUser(demoUser);
-      localStorage.setItem("authUser", JSON.stringify(demoUser));
-      router.push("/");
-    } else {
-      alert("Invalid credentials");
+  const login = async (email: string, password: string): Promise<{ error?: string }> => {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        return { error: error.message };
+      }
+
+      if (data.user) {
+        // Fetch profile
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', data.user.id)
+          .maybeSingle();
+
+        const authUser: User = {
+          id: data.user.id,
+          name: profile?.name || data.user.email?.split('@')[0] || 'User',
+          email: data.user.email || null,
+          phone: profile?.phone || null,
+        };
+
+        setUser(authUser);
+        localStorage.setItem('authUser', JSON.stringify(authUser));
+        router.push('/');
+      }
+      return {};
+    } catch (err) {
+      return { error: err instanceof Error ? err.message : 'Login failed' };
     }
   };
 
-  const logout = () => {
+  const signup = async (name: string, email: string, password: string): Promise<{ error?: string }> => {
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+
+      if (error) {
+        return { error: error.message };
+      }
+
+      if (data.user) {
+        // Create profile
+        await supabase.from('profiles').insert({
+          id: data.user.id,
+          name,
+          email,
+        });
+
+        const authUser: User = {
+          id: data.user.id,
+          name,
+          email,
+          phone: null,
+        };
+
+        setUser(authUser);
+        localStorage.setItem('authUser', JSON.stringify(authUser));
+        router.push('/');
+      }
+      return {};
+    } catch (err) {
+      return { error: err instanceof Error ? err.message : 'Signup failed' };
+    }
+  };
+
+  const logout = async () => {
+    await supabase.auth.signOut();
     setUser(null);
-    localStorage.removeItem("authUser");
-    router.push("/login");
+    localStorage.removeItem('authUser');
+    router.push('/login');
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, signup, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
@@ -59,8 +130,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 export function useAuth() {
   const ctx = useContext(AuthContext);
   if (!ctx) {
-    throw new Error("useAuth must be used within AuthProvider");
+    throw new Error('useAuth must be used within AuthProvider');
   }
   return ctx;
 }
-

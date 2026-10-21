@@ -9,6 +9,7 @@ import Logo from '@/components/ui/Logo';
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -20,21 +21,16 @@ export default function LoginPage() {
     }
   }, [user, router]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
 
-    const demoEmail = 'erick@example.com';
-    const demoPass = 'erick123';
-
-    if (email === demoEmail && password === demoPass) {
-      login(email, password);
-      router.push('/');
-    } else {
-      setError('Invalid credentials – try erick@example.com / erick123');
-      setLoading(false);
+    const result = await login(email, password);
+    if (result.error) {
+      setError(result.error);
     }
+    setLoading(false);
   };
 
   return (
@@ -86,17 +82,37 @@ export default function LoginPage() {
 
             <div>
               <label htmlFor="password" className="mb-2 block text-sm font-semibold text-[var(--ink)]">Password</label>
-              <input
-                id="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full min-h-[52px] px-4 py-3 bg-white border border-[var(--line)] rounded-[16px] text-[var(--ink)] placeholder-[var(--deep)]/30 focus:outline-none focus:border-[var(--green)] focus:ring-2 focus:ring-[var(--mint)] transition-colors"
-                placeholder="••••••••"
-                disabled={loading}
-              />
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full min-h-[52px] px-4 py-3 pr-12 bg-white border border-[var(--line)] rounded-[16px] text-[var(--ink)] placeholder-[var(--deep)]/30 focus:outline-none focus:border-[var(--green)] focus:ring-2 focus:ring-[var(--mint)] transition-colors"
+                  placeholder="••••••••"
+                  disabled={loading}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-[var(--deep)]/50 hover:text-[var(--ink)] transition-colors"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20a10 10 0 0 1-7.27-3A10 10 0 0 1 12 4a10 10 0 0 1 7.27 3 10 10 0 0 1 .67 10.94Z" />
+                      <line x1="1" y1="1" x2="23" y2="23" />
+                    </svg>
+                  ) : (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                      <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  )}
+                </button>
+              </div>
             </div>
 
             <Button
@@ -110,10 +126,6 @@ export default function LoginPage() {
           </form>
 
           <p className="mt-6 text-center text-sm text-[var(--deep)]/50">
-            Demo: erick@example.com / erick123
-          </p>
-
-          <p className="mt-4 text-center text-sm text-[var(--deep)]/50">
             Don&apos;t have an account?{' '}
             <a href="/signup" className="text-[var(--green)] font-semibold hover:underline">Sign up</a>
           </p>

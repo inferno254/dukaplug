@@ -7,13 +7,14 @@ import Button from '@/components/ui/Button';
 import Logo from '@/components/ui/Logo';
 
 export default function SignupPage() {
-  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { login, user } = useAuth();
+  const { signup, user } = useAuth();
 
   useEffect(() => {
     if (user) {
@@ -21,12 +22,12 @@ export default function SignupPage() {
     }
   }, [user, router]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
 
-    if (!name || !email || !password) {
+    if (!email || !name || !password) {
       setError('Please fill in all fields');
       setLoading(false);
       return;
@@ -38,9 +39,11 @@ export default function SignupPage() {
       return;
     }
 
-    // Demo signup – log in with the demo credentials
-    login('erick@example.com', 'erick123');
-    router.push('/');
+    const result = await signup(name, email, password);
+    if (result.error) {
+      setError(result.error);
+    }
+    setLoading(false);
   };
 
   return (
@@ -76,21 +79,6 @@ export default function SignupPage() {
             )}
 
             <div>
-              <label htmlFor="name" className="mb-2 block text-sm font-semibold text-[var(--ink)]">Name</label>
-              <input
-                id="name"
-                type="text"
-                autoComplete="name"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full min-h-[52px] px-4 py-3 bg-white border border-[var(--line)] rounded-[16px] text-[var(--ink)] placeholder-[var(--deep)]/30 focus:outline-none focus:border-[var(--green)] focus:ring-2 focus:ring-[var(--mint)] transition-colors"
-                placeholder="Your name"
-                disabled={loading}
-              />
-            </div>
-
-            <div>
               <label htmlFor="email" className="mb-2 block text-sm font-semibold text-[var(--ink)]">Email</label>
               <input
                 id="email"
@@ -106,18 +94,53 @@ export default function SignupPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="mb-2 block text-sm font-semibold text-[var(--ink)]">Password</label>
+              <label htmlFor="name" className="mb-2 block text-sm font-semibold text-[var(--ink)]">Name</label>
               <input
-                id="password"
-                type="password"
-                autoComplete="new-password"
+                id="name"
+                type="text"
+                autoComplete="name"
                 required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 className="w-full min-h-[52px] px-4 py-3 bg-white border border-[var(--line)] rounded-[16px] text-[var(--ink)] placeholder-[var(--deep)]/30 focus:outline-none focus:border-[var(--green)] focus:ring-2 focus:ring-[var(--mint)] transition-colors"
-                placeholder="••••••••"
+                placeholder="Your name"
                 disabled={loading}
               />
+            </div>
+
+            <div>
+              <label htmlFor="password" className="mb-2 block text-sm font-semibold text-[var(--ink)]">Password</label>
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="new-password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full min-h-[52px] px-4 py-3 pr-12 bg-white border border-[var(--line)] rounded-[16px] text-[var(--ink)] placeholder-[var(--deep)]/30 focus:outline-none focus:border-[var(--green)] focus:ring-2 focus:ring-[var(--mint)] transition-colors"
+                  placeholder="••••••••"
+                  disabled={loading}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-[var(--deep)]/50 hover:text-[var(--ink)] transition-colors"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20a10 10 0 0 1-7.27-3A10 10 0 0 1 12 4a10 10 0 0 1 7.27 3 10 10 0 0 1 .67 10.94Z" />
+                      <line x1="1" y1="1" x2="23" y2="23" />
+                    </svg>
+                  ) : (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                      <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  )}
+                </button>
+              </div>
             </div>
 
             <Button

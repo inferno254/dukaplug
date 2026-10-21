@@ -1,9 +1,22 @@
 'use client';
 
 import { createContext, useContext, useState, ReactNode } from 'react';
-import { menuItems } from '@/data/products';
 
-type Product = typeof menuItems[number];
+interface Product {
+  id: string;
+  name: string;
+  description: string | null;
+  price: number;
+  category: string | null;
+  image_url: string | null;
+  is_available: boolean;
+  vendor?: {
+    id: string;
+    name: string;
+    rating: number;
+    location: string | null;
+  };
+}
 
 interface CartItem {
   product: Product;
@@ -26,10 +39,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addItem = (product: Product) => {
     setItems((prev) => {
-      const existing = prev.find((i) => i.product.name === product.name);
+      const existing = prev.find((i) => i.product.id === product.id);
       if (existing) {
         return prev.map((i) =>
-          i.product.name === product.name
+          i.product.id === product.id
             ? { ...i, quantity: i.quantity + 1 }
             : i
         );
@@ -39,7 +52,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const removeItem = (product: Product) => {
-    setItems((prev) => prev.filter((i) => i.product.name !== product.name));
+    setItems((prev) => prev.filter((i) => i.product.id !== product.id));
   };
 
   const updateQuantity = (product: Product, quantity: number) => {
@@ -49,7 +62,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
     setItems((prev) =>
       prev.map((i) =>
-        i.product.name === product.name ? { ...i, quantity } : i
+        i.product.id === product.id ? { ...i, quantity } : i
       )
     );
   };

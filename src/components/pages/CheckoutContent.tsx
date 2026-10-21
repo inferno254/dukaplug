@@ -1,30 +1,77 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAppContext } from '@/context/AppContext';
 import { useCartContext } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
 import Header from '@/components/layout/Header';
 import Icon from '@/components/ui/Icon';
 import Button from '@/components/ui/Button';
 
 export default function CheckoutContent({ go }: { go: (p: string) => void }) {
   const { location, openLocation } = useAppContext();
-  const { 
-    items, 
-    addItem, 
-    removeItem, 
-    updateQuantity, 
-    clearCart 
-  } = useCartContext();
+  const { items, addItem, removeItem, updateQuantity, clearCart } = useCartContext();
+  const { user } = useAuth();
 
   const [stage, setStage] = useState<'details' | 'paying' | 'success'>('details');
+  const [tip, setTip] = useState(0);
+  const [phone, setPhone] = useState(user?.phone || '712 345 678');
+  const [processing, setProcessing] = useState(false);
 
-  useEffect(() => {
-    if (stage === 'paying') {
-      const id = window.setTimeout(() => setStage('success'), 1800);
-      return () => window.clearTimeout(id);
+  const subtotal = items.reduce(
+    (sum, item) => sum + item.product.price * item.quantity,
+    0
+  );
+  const total = subtotal + tip;
+
+  const handlePay = async () => {
+    if (items.length === 0) return;
+    setProcessing(true);
+    setStage('paying');
+
+    try {
+      // Create order in database
+      const orderRes = await fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(user?.id && { 'Authorization': `Bearer ${user.id}` }),
+        },
+        body: JSON.stringify({
+          items,
+          vendorId: items[0]?.product?.vendor?.id,
+          deliveryAddress: location.detail,
+          deliveryLocation: location.name,
+          paymentMethod: 'mpesa',
+          phone,
+          total,
+        }),
+      });
+
+      if (!orderRes.ok) {
+        console.error('Failed to create order');
+      }
+
+      // Initiate STK Push
+      const stkRes = await fetch('/api/mpesa/stkpush', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone, amount: total, orderId: orderRes.ok ? (await orderRes.json()).id : undefined }),
+      });
+
+      if (!stkRes.ok) {
+        console.error('STK Push failed');
+      }
+    } catch (err) {
+      console.error('Payment error:', err);
     }
-  }, [stage]);
+
+    // Simulate payment processing
+    setTimeout(() => {
+      setStage('success');
+      setProcessing(false);
+    }, 1800);
+  };
 
   if (stage === 'success') {
     return (
@@ -37,8 +84,8 @@ export default function CheckoutContent({ go }: { go: (p: string) => void }) {
         <h1>Order confirmed.</h1>
         <p>Mama Njeri's is preparing your food.<br />Your rider will be with you soon.</p>
         <div className="order-number">Order #DP2408 <b>ETA 24 min</b></div>
-        <Button 
-          onClick={() => go('/')} 
+        <Button
+          onClick={() => go('/')}
           icon="arrow"
         >
           Track my order
@@ -50,12 +97,10 @@ export default function CheckoutContent({ go }: { go: (p: string) => void }) {
     );
   }
 
-  const total = items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
-
   return (
     <main className="checkout-page">
-      <button 
-        className="plain-back" 
+      <button
+        className="plain-back"
         onClick={() => go('/shop')}
       >
         ← Back to menu
@@ -72,8 +117,8 @@ export default function CheckoutContent({ go }: { go: (p: string) => void }) {
                 <p>Where should we bring it?</p>
               </div>
             </div>
-            <button 
-              className="address-card" 
+            <button
+              className="address-card"
               onClick={openLocation}
             >
               <Icon name="pin" />
@@ -97,10 +142,10 @@ export default function CheckoutContent({ go }: { go: (p: string) => void }) {
               </div>
             </div>
             <label className="payment-option selected">
-              <input 
-                type="radio" 
-                defaultChecked 
-                name="pay" 
+              <input
+                type="radio"
+                defaultChecked
+                name="pay"
               />
               <b className="mpesa">M</b>
               <span>
@@ -110,8 +155,9 @@ export default function CheckoutContent({ go }: { go: (p: string) => void }) {
             </label>
             <label className="phone-input">
               <span>+254</span>
-              <input 
-                defaultValue="712 345 678"
+              <input
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
                 aria-label="M-Pesa phone number"
               />
             </label>
@@ -127,24 +173,44 @@ export default function CheckoutContent({ go }: { go: (p: string) => void }) {
         </section>
         <aside className="order-summary">
           <h2>Your order</h2>
-          <small>Mama Njeri's Kitchen</small>
-          <div className="summary-item">
-            <img src={items[0]?.product?.image || 'https://images.unsplash.com/photo-1726177974666-88e937fa8e59?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=1200'} alt="" />
-            <span>
-              <b>{items[0]?.product?.name || 'Loaded nyama choma bowl'}</b>
-              <small>1 × KES {items[0]?.product?.price || 680}</small>
-            </span>
-            <button>Edit</button>
-          </div>
-          {items.length > 1 && (
-            <div className="summary-item">
-              <img src={items[1]?.product?.image || 'https://images.unsplash.com/photo-1738291422837-85761f82a10e?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=1200'} alt="" />
-              <span>
-                <b>{items[1]?.product?.name || 'Fresh passion juice'}</b>
-                <small>1 × KES {items[1]?.product?.price || 180}</small>
-              </span>
-              <button>Edit</button>
-            </div>
+          {items.length === 0 ? (
+            <p className="empty-cart">Your cart is empty.</p>
+          ) : (
+            <>
+              {items.map((item) => (
+                <div className="summary-item" key={item.product.id}>
+                  <img
+                    src={item.product.image_url || 'https://images.unsplash.com/photo-1726177974666-88e937fa8e59?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=1200'}
+                    alt={item.product.name}
+                  />
+                  <span>
+                    <b>{item.product.name}</b>
+                    <small>
+                      {item.quantity} × KES {item.product.price}
+                    </small>
+                  </span>
+                  <div className="qty-controls">
+                    <button
+                      aria-label="Decrease"
+                      onClick={() =>
+                        updateQuantity(item.product, item.quantity - 1)
+                      }
+                    >
+                      −
+                    </button>
+                    <span>{item.quantity}</span>
+                    <button
+                      aria-label="Increase"
+                      onClick={() =>
+                        updateQuantity(item.product, item.quantity + 1)
+                      }
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </>
           )}
           <label className="promo">
             <input placeholder="Promo code" />
@@ -153,13 +219,19 @@ export default function CheckoutContent({ go }: { go: (p: string) => void }) {
           <div className="tip-row">
             <span>Rider tip</span>
             {[0, 50, 100].map((n) => (
-              <button key={n}>KES {n}</button>
+              <button
+                key={n}
+                className={tip === n ? 'active' : ''}
+                onClick={() => setTip(n)}
+              >
+                KES {n}
+              </button>
             ))}
           </div>
           <div className="totals">
             <p>
               <span>Subtotal</span>
-              <b>KES {total}</b>
+              <b>KES {subtotal}</b>
             </p>
             <p>
               <span>Delivery</span>
@@ -170,11 +242,14 @@ export default function CheckoutContent({ go }: { go: (p: string) => void }) {
               <b>KES {total}</b>
             </p>
           </div>
-          <Button 
-            variant="yellow" 
-            onClick={() => setStage('paying')}
+          <Button
+            variant="yellow"
+            disabled={items.length === 0 || processing}
+            onClick={handlePay}
           >
-            {stage === 'paying' ? "Waiting for M-Pesa..." : `Pay KES ${total}`}
+            {stage === 'paying'
+              ? 'Waiting for M-Pesa...'
+              : `Pay KES ${total}`}
           </Button>
           {stage === 'paying' && (
             <div className="waiting">

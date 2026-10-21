@@ -66,9 +66,9 @@ export default function CartSidebar() {
             <>
               {items.map((item, index) => (
                 <div key={index} className="cart-item">
-                  <img 
-                    src={item.product.image} 
-                    alt={item.product.name} 
+                  <img
+                    src={item.product.image_url || 'https://images.unsplash.com/photo-1726177974666-88e937fa8e59?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=1200'}
+                    alt={item.product.name}
                     className="cart-item-image"
                   />
                   <div className="cart-item-details">

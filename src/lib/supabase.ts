@@ -5,7 +5,15 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('Supabase environment variables not set. Supabase client will not work.');
+  if (process.env.NODE_ENV === 'development') {
+    console.warn('Supabase environment variables not set. Supabase client will not work.');
+  }
+}
+
+if (!supabaseServiceKey) {
+  if (process.env.NODE_ENV === 'development') {
+    console.warn('SUPABASE_SERVICE_ROLE_KEY not set. Admin client will not work.');
+  }
 }
 
 // Client-side Supabase client
@@ -17,7 +25,13 @@ export const supabase = createClient(
 // Server-side Supabase client with service role key
 export const supabaseAdmin = createClient(
   supabaseUrl || 'https://placeholder.supabase.co',
-  supabaseServiceKey || 'placeholder-key'
+  supabaseServiceKey || 'placeholder-key',
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  }
 );
 
 // Database types

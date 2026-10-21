@@ -7,9 +7,18 @@ import ThemeToggle from '@/components/ui/ThemeToggle';
 import LanguageToggle from '@/components/ui/LanguageToggle';
 import { useAppContext } from '@/context/AppContext';
 import { useLanguage } from '@/context/LanguageContext';
+import { useAuth } from '@/context/AuthContext';
 
 export default function Header() {
   const { page, go, cartCount, location, openLocation } = useAppContext();
+  const { user, logout } = useAuth();
+
+  // Smart name display: first name only, fallback to email prefix
+  const displayName = user?.name
+    ? user.name.split(' ')[0]
+    : user?.email
+    ? user.email.split('@')[0]
+    : null;
 
   return (
     <header className="header">
@@ -22,7 +31,7 @@ export default function Header() {
           <small>Delivering to</small>
           {location.name}
         </span>
-        <span>⌄</span>
+        <span>^.^</span>
       </button>
       <div className="nav-search">
         <Icon name="search" />
@@ -39,9 +48,22 @@ export default function Header() {
           <Icon name="cart" />
           <span>{cartCount}</span>
         </button>
-        <a className="login-button" href="/login">
-          Log in
-        </a>
+        {user ? (
+          <button
+            className={`nav-profile-button ${page === 'profile' ? 'active' : ''}`}
+            onClick={() => go('profile')}
+            title={user.name || displayName || 'Account'}
+          >
+            <span className="profile-avatar-mini">
+              {(displayName || '?').charAt(0).toUpperCase()}
+            </span>
+            <span className="profile-name">{displayName || 'Account'}</span>
+          </button>
+        ) : (
+          <a className="login-button" href="/login">
+            Log in
+          </a>
+        )}
         <ThemeToggle />
         <LanguageToggle />
       </nav>

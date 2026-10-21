@@ -47,6 +47,11 @@ h1, h2, h3, .logo { font-family: "Bricolage Grotesque", sans-serif; }
 .cart-button { position: relative; width: 46px; display: grid; place-items: center; }
 .cart-button span { position: absolute; top: 1px; right: 0; width: 19px; height: 19px; display: grid; place-items: center; background: var(--yellow); border-radius: 50%; font-size: 10px; }
 
+.nav-profile-button { display: inline-flex; align-items: center; gap: 9px; min-height: 46px; padding: 5px 14px 5px 5px; color: var(--ink); border: 1px solid var(--ink); border-radius: 99px; background: var(--white); font-weight: 700; }
+.nav-profile-button.active { color: var(--deep); border-color: var(--deep); }
+.profile-avatar-mini { width: 34px; height: 34px; display: grid; place-items: center; color: var(--ink); background: var(--yellow); border: 2px solid var(--ink); border-radius: 50%; font-family: "Bricolage Grotesque", sans-serif; font-size: 16px; font-weight: 800; }
+.profile-name { font-size: 14px; }
+
 .btn { min-height: 52px; display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 0 24px; border: 1px solid transparent; border-radius: 99px; font-weight: 800; transition: transform .2s, box-shadow .2s; }
 .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 0 rgba(15,20,16,.12); }
 .btn-green { color: white; background: var(--deep); }
@@ -307,8 +312,48 @@ footer { padding:70px max(24px, calc((100vw - 1272px)/2)) 25px; color:white; bac
 .dark .sheet-content,
 .dark .location-backdrop,
 .dark .sheet-backdrop { background: var(--cream); }
-.dark footer { background: var(--ink); }
-.dark .dash-side { background: var(--ink); }
+.dark footer { background: #0a0a0a; color: #e8e4dc; }
+.dark footer .footer-top h2 em { color: var(--yellow); }
+.dark footer .footer-grid p { color: #b8c0b9; }
+.dark footer .footer-grid button { color: #b8c0b9; }
+.dark footer .footer-bottom { color: #89908a; border-top-color: rgba(255,255,255,0.15); }
+.dark .cart-drawer, .dark .cart-drawer-content { background: var(--cream); color: var(--ink); }
+.dark .cart-drawer-header, .dark .cart-drawer-body { color: var(--ink); }
+.dark .empty-cart { color: #68706a; }
+.dark .cart-item, .dark .cart-item-details, .dark .cart-item-price, .dark .cart-item-controls { color: var(--ink); }
+.dark .cart-item-image { background: var(--white); }
+.dark .order-summary { background: var(--white); }
+.dark .order-summary h2 { color: var(--ink); }
+.dark .promo, .dark .tip-row, .dark .totals { color: var(--ink); }
+.dark .promo input, .dark .promo button, .dark .tip-row button { color: var(--ink); background: var(--white); }
+.dark .totals p, .dark .totals .grand { color: var(--ink); }
+.dark .totals .free { color: var(--green); }
+.dark .summary-item, .dark .summary-item b, .dark .summary-item small { color: var(--ink); }
+.dark .qty-controls button, .dark .qty-controls span { color: var(--ink); }
+.dark .payment-option, .dark .payment-option strong, .dark .payment-option small { color: var(--ink); }
+.dark .payment-option.selected { background: var(--mint); border-color: var(--green); }
+.dark .phone-input, .dark .phone-input input { color: var(--ink); background: var(--white); }
+.dark .phone-input span { color: var(--ink); }
+.dark .card-icon, .dark .mpesa { color: var(--ink); }
+.dark .cart-summary, .dark .summary-row, .dark .cart-divider, .dark .cart-actions, .dark .qty-btn, .dark .remove-item, .dark .close-btn, .dark .cart-drawer-header h2 { color: var(--ink); }
+.dark .cart-summary .total { color: var(--ink); }
+.dark .cart-drawer-backdrop { background: rgba(0,0,0,0.55); }
+.dark .dash-side { background: #0a0a0a; }
+.dark .dashboard { border-color: var(--ink); box-shadow: 18px 18px 0 var(--yellow); }
+.dark .vendor-banner { color: #f4f1ea; background: #0a0a0a; }
+.dark .rider-banner { color: var(--ink); background: var(--yellow); }
+.dark .partner { background: var(--cream); }
+.dark .partner h2, .dark .partner p { color: var(--ink); }
+.dark .vendor-hero { color: #f4f1ea; }
+.dark .vendor-hero > div:first-child > p { color: #c3d5c9; }
+.dark .vendor-proof span { color: #c3d5c9; }
+.dark .dashboard-mini { color: var(--ink); background: var(--white); }
+.dark .dash-main { color: var(--ink); }
+.dark .dash-side span { color: #aab2ac; }
+.dark .dash-side span.active { color: var(--ink); background: var(--yellow); }
+.dark .metric-grid > div { background: var(--white); }
+.dark .incoming { background: var(--butter); border-color: var(--yellow); }
+.dark .vendor-hero .text-link.light { color: white; }
 .dark .vendor-hero,
 .dark .deals,
 .dark .hero,
@@ -316,7 +361,45 @@ footer { padding:70px max(24px, calc((100vw - 1272px)/2)) 25px; color:white; bac
 .dark .hero-phone { color: white; }
 .dark .hero,
 .dark .hero-burst { background: var(--green); }
-.dark .hero-phone { background: var(--ink); }
+.dark .hero-phone { background: #0a0a0a; }
+.dark .shopping-card { color: #f4f1ea; background: #0a0a0a; }
+.dark .logo img { mix-blend-mode: normal; }
+
+/* Dark mode — blanket: all white backgrounds become black, muted text becomes light */
+.dark * {
+  --white: #0d0d0d;
+}
+.dark [style*="background: white"],
+.dark [style*="background:#ffffff"],
+.dark [style*="background: #ffffff"] { background: #0d0d0d !important; }
+.dark [style*="background-color: white"],
+.dark [style*="background-color:#ffffff"],
+.dark [style*="background-color: #ffffff"] { background-color: #0d0d0d !important; }
+.dark .dark-kicker { color: var(--yellow); }
+
+/* Catch any remaining inline white backgrounds */
+.dark [style*="background:white"],
+.dark [style*="background: white"],
+.dark [style*="background:#fff"],
+.dark [style*="background: #fff"],
+.dark [style*="background:#ffffff"],
+.dark [style*="background: #ffffff"],
+.dark [style*="background-color:white"],
+.dark [style*="background-color: white"],
+.dark [style*="background-color:#fff"],
+.dark [style*="background-color: #fff"],
+.dark [style*="background-color:#ffffff"],
+.dark [style*="background-color: #ffffff"] { background: #0a0a0a !important; background-color: #0a0a0a !important; }
+
+/* Tracking map */
+.dark .map { background: #0a1a14; }
+.dark .map::before { background-image: linear-gradient(rgba(18,183,106,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(18,183,106,.12) 1px,transparent 1px); }
+.dark .map-road { background: #0a0a0a; border-color: #1a1a1a; }
+.dark .map-label { color: var(--cream); }
+.dark .map-pin { background: #0a0a0a; border-color: var(--cream); }
+.dark .map-pin .food-glyph { color: var(--cream); }
+.dark .rider-dot { background: var(--deep); border-color: #0a0a0a; }
+.dark .tracking-panel { background: var(--cream); }
 .dark .service-card,
 .dark .shop-card,
 .dark .product-card,

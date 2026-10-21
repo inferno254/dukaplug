@@ -53,7 +53,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const { cartCount } = useCartContext();
 
   const [browseType, setBrowseType] = useState<BrowseType>('food');
-  const [location, setLocation] = useState<DeliveryLocation>({ name: 'HQ · Kitui', detail: 'DukaPlug HQ, Top Notch, Kitui' });
+  const [location, setLocation] = useState<DeliveryLocation>({ name: 'Top Notch, Kitui', detail: 'DukaPlug HQ, Top Notch, Kitui' });
   const [showLocation, setShowLocation] = useState<boolean>(false);
   const [sheet, setSheet] = useState<boolean>(false);
 
@@ -107,7 +107,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         showLocation,
         sheet,
         deliveryAreas: [
-          { name: 'HQ · Kitui', detail: 'DukaPlug HQ, Top Notch, Kitui' },
+          { name: 'Top Notch, Kitui', detail: 'DukaPlug HQ, Top Notch, Kitui' },
           { name: 'Kitui Town', detail: 'Central Business District, Kitui' },
           { name: 'Mwingi', detail: 'Mwingi Central, Kitui County' },
           { name: 'Mutomo', detail: 'Mutomo Market, Kitui County' },

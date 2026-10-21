@@ -10,6 +10,8 @@ export type User = {
   name: string;
   email: string | null;
   phone: string | null;
+  location: string | null;
+  locationDetail: string | null;
 };
 
 type AuthContextType = {
@@ -18,6 +20,7 @@ type AuthContextType = {
   signup: (name: string, email: string, password: string) => Promise<{ error?: string }>;
   logout: () => Promise<void>;
   clearAuth: () => void;
+  updateProfile: (updates: Partial<Omit<User, 'id'>>) => Promise<{ error?: string }>;
   loading: boolean;
 };
 
@@ -35,9 +38,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const parsed = JSON.parse(stored);
         // Verify session is still valid
-        supabase.auth.getSession().then(({ data: { session } }) => {
+        supabase.auth.getSession().then(async ({ data: { session } }) => {
           if (session?.user?.id === parsed.id) {
-            setUser(parsed);
+            // Refresh profile data (location may have changed)
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('*')
+              .eq('id', parsed.id)
+              .maybeSingle();
+
+            const authUser: User = {
+              id: parsed.id,
+              name: profile?.name || parsed.name,
+              email: profile?.email || parsed.email,
+              phone: profile?.phone || parsed.phone || null,
+              location: profile?.location || parsed.location || null,
+              locationDetail: profile?.location_detail || parsed.locationDetail || null,
+            };
+            setUser(authUser);
+            localStorage.setItem('authUser', JSON.stringify(authUser));
           } else {
             localStorage.removeItem('authUser');
           }
@@ -81,6 +100,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           name: profile?.name || data.user.email?.split('@')[0] || 'User',
           email: data.user.email || null,
           phone: profile?.phone || null,
+          location: profile?.location || null,
+          locationDetail: profile?.location_detail || null,
         };
 
         setUser(authUser);
@@ -106,11 +127,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       if (data.user) {
-        // Create profile
+        // Create profile with default HQ location
         await supabase.from('profiles').insert({
           id: data.user.id,
           name,
           email,
+          location: 'HQ · Kitui',
+          location_detail: 'DukaPlug HQ, Top Notch, Kitui',
         });
 
         const authUser: User = {
@@ -118,6 +141,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           name,
           email,
           phone: null,
+          location: 'HQ · Kitui',
+          locationDetail: 'DukaPlug HQ, Top Notch, Kitui',
         };
 
         setUser(authUser);
@@ -131,6 +156,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const updateProfile = async (updates: Partial<Omit<User, 'id'>>): Promise<{ error?: string }> => {
+    if (!user) return { error: 'Not authenticated' };
+
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .update({ ...updates, updated_at: new Date().toISOString() })
+        .eq('id', user.id)
+        .select()
+        .maybeSingle();
+
+      if (error) return { error: error.message };
+
+      const updated: User = {
+        ...user,
+        name: data?.name || user.name,
+        email: data?.email || user.email,
+        phone: data?.phone || user.phone,
+        location: data?.location || user.location,
+        locationDetail: data?.location_detail || user.locationDetail,
+      };
+      setUser(updated);
+      localStorage.setItem('authUser', JSON.stringify(updated));
+      return {};
+    } catch (err) {
+      return { error: err instanceof Error ? err.message : 'Update failed' };
+    }
+  };
+
   const logout = async () => {
     await supabase.auth.signOut();
     setUser(null);
@@ -139,7 +193,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, signup, logout, clearAuth, loading }}>
+    <AuthContext.Provider value={{ user, login, signup, logout, clearAuth, updateProfile, loading }}>
       {children}
     </AuthContext.Provider>
   );

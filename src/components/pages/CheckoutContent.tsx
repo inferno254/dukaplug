@@ -159,6 +159,10 @@ export default function CheckoutContent({ go }: { go: (p: string) => void }) {
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 aria-label="M-Pesa phone number"
+                autoComplete="off"
+                inputMode="numeric"
+                data-1p-ignore
+                data-lpignore
               />
             </label>
             <label className="payment-option">

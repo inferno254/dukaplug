@@ -404,6 +404,90 @@ footer { padding:70px max(24px, calc((100vw - 1272px)/2)) 25px; color:white; bac
 .dark .shop-card,
 .dark .product-card,
 .dark .steps > div,
+.dark .desktop-cart,
+.dark .category-chip,
+.dark .shop-info,
+.dark .shop-meta,
+.dark .shop-stats,
+.dark .shop-title,
+.dark .shop-cover,
+.dark .shop-image,
+.dark .shop-image::after,
+.dark .shop-image img,
+.dark .card-badge,
+.dark .heart,
+.dark .rating,
+.dark .category-photo,
+.dark .category-photo img,
+.dark .category-arrow,
+.dark .price-note,
+.dark .category-scroll,
+.dark .category-heading,
+.dark .category-section,
+.dark .category-tabs,
+.dark .menu-tabs,
+.dark .menu-list,
+.dark .menu-layout,
+.dark .shop-grid,
+.dark .product-grid,
+.dark .product-card img,
+.dark .product-card h3,
+.dark .product-card p,
+.dark .product-card b,
+.dark .add-button,
+.dark .stepper,
+.dark .stepper button,
+.dark .stepper span,
+.dark .shop-cover img,
+.dark .shop-cover::after,
+.dark .shop-image::after,
+.dark .shop-image img,
+.dark .category-photo img,
+.dark .product-card img,
+.dark .recent-card img,
+.dark .hero::after,
+.dark .shop-cover img { background: var(--white) !important; }
+
+/* Shop page text colors */
+.dark .product-card { background: #0d0d0d !important; border-color: rgba(255,255,255,0.12) !important; }
+.dark .product-card h3, .dark .product-card b { color: var(--ink) !important; }
+.dark .product-card p { color: #b8c0b9 !important; }
+.dark .shop-card { background: #0d0d0d !important; border-color: rgba(255,255,255,0.12) !important; }
+.dark .shop-info h3, .dark .shop-info p, .dark .shop-meta, .dark .shop-meta span, .dark .shop-stats span, .dark .shop-title p { color: var(--ink) !important; }
+.dark .shop-title h1 { color: var(--ink) !important; }
+.dark .shop-cover { background: #0d0d0d !important; }
+.dark .shop-image { background: #0d0d0d !important; }
+.dark .category-photo { background: #0d0d0d !important; }
+.dark .category-chip { background: #0d0d0d !important; color: var(--ink) !important; }
+.dark .category-chip small { color: var(--deep) !important; }
+.dark .category-tabs button { color: #b8c0b9 !important; }
+.dark .category-tabs button.active { color: white !important; }
+.dark .category-tabs button small { color: var(--ink) !important; }
+.dark .menu-tabs button { color: #b8c0b9 !important; }
+.dark .menu-tabs button.active { color: var(--deep) !important; }
+.dark .menu-layout > div > p { color: #b8c0b9 !important; }
+.dark .menu-layout h2 { color: var(--ink) !important; }
+.dark .menu-list { color: var(--ink) !important; }
+.dark .empty-state { color: #b8c0b9 !important; }
+.dark .loading-state, .dark .error-state { color: #b8c0b9 !important; }
+.dark .empty-cart-hint { color: #b8c0b9 !important; }
+.dark .cart-line, .dark .cart-line span, .dark .cart-line b, .dark .cart-line.total { color: var(--ink) !important; }
+.dark .desktop-cart { background: #0d0d0d !important; border-color: rgba(255,255,255,0.12) !important; }
+.dark .desktop-cart h2 { color: var(--ink) !important; }
+.dark .desktop-cart .kicker { color: var(--deep) !important; }
+.dark .browse-switch { background: #0d0d0d !important; }
+.dark .browse-switch button { color: #b8c0b9 !important; }
+.dark .browse-switch button.active { color: white !important; }
+.dark .mobile-cart-bar { background: #0d0d0d !important; color: var(--ink) !important; border-color: rgba(255,255,255,0.12) !important; }
+.dark .mobile-cart-bar span, .dark .mobile-cart-bar b { color: var(--ink) !important; }
+.dark .shop-stats span { color: #b8c0b9 !important; }
+.dark .rating { background: #0d0d0d !important; color: var(--ink) !important; }
+.dark .rating svg { fill: var(--green) !important; stroke: var(--green) !important; }
+.dark .heart { background: #0d0d0d !important; color: var(--ink) !important; }
+.dark .card-badge { background: var(--yellow) !important; color: var(--ink) !important; }
+.dark .price-note { color: #b8c0b9 !important; }
+.dark .shop-cover::after, .dark .shop-image::after { background: linear-gradient(90deg,rgba(15,20,16,.18),transparent 55%),linear-gradient(0deg,rgba(11,122,67,.2),transparent 55%) !important; }
+.dark .shop-cover img, .dark .shop-image img, .dark .category-photo img, .dark .product-card img, .dark .recent-card img { filter: brightness(0.85) contrast(1.05) !important; }
 .dark .profile-grid > section,
 .dark .checkout-block,
 .dark .order-summary,

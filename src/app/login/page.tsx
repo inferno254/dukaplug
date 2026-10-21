@@ -13,7 +13,12 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { login, user } = useAuth();
+  const { login, user, clearAuth } = useAuth();
+
+  useEffect(() => {
+    // Clear any stale auth state when visiting login page
+    clearAuth();
+  }, [clearAuth]);
 
   useEffect(() => {
     if (user) {
@@ -29,8 +34,8 @@ export default function LoginPage() {
     const result = await login(email, password);
     if (result.error) {
       setError(result.error);
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (

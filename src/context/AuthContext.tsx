@@ -17,6 +17,7 @@ type AuthContextType = {
   login: (email: string, password: string) => Promise<{ error?: string }>;
   signup: (name: string, email: string, password: string) => Promise<{ error?: string }>;
   logout: () => Promise<void>;
+  clearAuth: () => void;
   loading: boolean;
 };
 
@@ -28,18 +29,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    // Check for existing session
+    // Check for existing session and validate with Supabase
     const stored = localStorage.getItem('authUser');
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
-        setUser(parsed);
+        // Verify session is still valid
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          if (session?.user?.id === parsed.id) {
+            setUser(parsed);
+          } else {
+            localStorage.removeItem('authUser');
+          }
+          setLoading(false);
+        });
       } catch {
         localStorage.removeItem('authUser');
+        setLoading(false);
       }
+    } else {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
+
+  const clearAuth = () => {
+    localStorage.removeItem('authUser');
+    setUser(null);
+  };
 
   const login = async (email: string, password: string): Promise<{ error?: string }> => {
     try {
@@ -70,8 +86,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(authUser);
         localStorage.setItem('authUser', JSON.stringify(authUser));
         router.push('/');
+        return {};
       }
-      return {};
+      return { error: 'Login failed - no user returned' };
     } catch (err) {
       return { error: err instanceof Error ? err.message : 'Login failed' };
     }
@@ -105,9 +122,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         setUser(authUser);
         localStorage.setItem('authUser', JSON.stringify(authUser));
-        router.push('/');
+        router.push('/login');
+        return {};
       }
-      return {};
+      return { error: 'Signup failed - no user returned' };
     } catch (err) {
       return { error: err instanceof Error ? err.message : 'Signup failed' };
     }
@@ -121,7 +139,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, signup, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, signup, logout, clearAuth, loading }}>
       {children}
     </AuthContext.Provider>
   );

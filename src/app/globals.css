@@ -229,3 +229,126 @@ footer { padding:70px max(24px, calc((100vw - 1272px)/2)) 25px; color:white; bac
 .tip-row button:not(:first-of-type) { margin-left:8px; }
 .totals p { font-size:14px; line-height:1.5; }
 .totals .grand { font-size:18px; font-weight:800; }
+
+/* Dark mode — all whitespace becomes black, text stays light */
+.dark {
+  --cream: #0a0a0a;
+  --white: #0d0d0d;
+  --mint: #0f1a14;
+  --butter: #1a1408;
+  --line: rgba(255,255,255,0.12);
+  --shadow: 0 18px 55px rgba(0,0,0,0.5);
+  --ink: #f4f1ea;
+}
+.dark body { background: var(--cream); }
+.dark .header { background: rgba(10,10,10,.94); }
+.dark .location-pill,
+.dark .nav-search,
+.dark .shop-card,
+.dark .product-card,
+.dark .service-card,
+.dark .sheet-content,
+.dark .sheet-footer,
+.dark .location-sheet,
+.dark .location-current,
+.dark .checkout-block,
+.dark .order-summary,
+.dark .profile-grid > section,
+.dark .recent-card,
+.dark .dashboard-mini,
+.dark .app-phone,
+.dark .steps > div,
+.dark .ticket.alt,
+.dark .price-tag,
+.dark .detect-button,
+.dark .address-card,
+.dark .payment-option,
+.dark .summary-item,
+.dark .order-number,
+.dark .phone-card,
+.dark .float-item,
+.dark .hero-sticker,
+.dark .shop-info,
+.dark .dash-main,
+.dark .metric-grid > div,
+.dark .incoming,
+.dark .category-tabs,
+.dark .browse-switch,
+.dark .toggle,
+.dark .location-search,
+.dark .search-float,
+.dark .shop-cover,
+.dark .location-current,
+.dark .app-order,
+.dark .sheet-backdrop { background: var(--white); }
+.dark .shop-cover::after,
+.dark .shop-image::after,
+.dark .shop-image img,
+.dark .category-photo img,
+.dark .product-card img,
+.dark .recent-card img,
+.dark .hero::after,
+.dark .shop-cover img { filter: brightness(0.85) contrast(1.05); }
+.dark .shop-cover,
+.dark .shop-image,
+.dark .category-photo,
+.dark .product-card,
+.dark .recent-card,
+.dark .shop-card { background: var(--white); }
+.dark .section,
+.dark .how,
+.dark .tracking-page,
+.dark .page-shell,
+.dark .checkout-page,
+.dark .profile-page,
+.dark .app,
+.dark .location-sheet,
+.dark .item-sheet,
+.dark .sheet-content,
+.dark .location-backdrop,
+.dark .sheet-backdrop { background: var(--cream); }
+.dark footer { background: var(--ink); }
+.dark .dash-side { background: var(--ink); }
+.dark .vendor-hero,
+.dark .deals,
+.dark .hero,
+.dark .hero-burst,
+.dark .hero-phone { color: white; }
+.dark .hero,
+.dark .hero-burst { background: var(--green); }
+.dark .hero-phone { background: var(--ink); }
+.dark .service-card,
+.dark .shop-card,
+.dark .product-card,
+.dark .steps > div,
+.dark .profile-grid > section,
+.dark .checkout-block,
+.dark .order-summary,
+.dark .location-current,
+.dark .location-sheet,
+.dark .item-sheet,
+.dark .sheet-content,
+.dark .sheet-footer,
+.dark .browse-switch,
+.dark .category-tabs,
+.dark .toggle,
+.dark .search-float,
+.dark .nav-search,
+.dark .location-pill,
+.dark .address-card,
+.dark .payment-option,
+.dark .summary-item,
+.dark .order-number,
+.dark .phone-card,
+.dark .float-item,
+.dark .hero-sticker,
+.dark .shop-info,
+.dark .dash-main,
+.dark .metric-grid > div,
+.dark .incoming,
+.dark .app-phone,
+.dark .app-order,
+.dark .detect-button,
+.dark .price-tag,
+.dark .ticket.alt,
+.dark .ticket { border-color: var(--line); }

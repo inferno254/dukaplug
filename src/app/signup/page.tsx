@@ -8,7 +8,8 @@ import Logo from '@/components/ui/Logo';
 
 export default function SignupPage() {
   const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -27,7 +28,7 @@ export default function SignupPage() {
     setError(null);
     setLoading(true);
 
-    if (!email || !name || !password) {
+    if (!email || !firstName || !lastName || !password) {
       setError('Please fill in all fields');
       setLoading(false);
       return;
@@ -39,11 +40,12 @@ export default function SignupPage() {
       return;
     }
 
-    const result = await signup(name, email, password);
+    const fullName = `${firstName.trim()} ${lastName.trim()}`;
+    const result = await signup(fullName, email, password);
     if (result.error) {
       setError(result.error);
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -93,19 +95,35 @@ export default function SignupPage() {
               />
             </div>
 
-            <div>
-              <label htmlFor="name" className="mb-2 block text-sm font-semibold text-[var(--ink)]">Name</label>
-              <input
-                id="name"
-                type="text"
-                autoComplete="name"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full min-h-[52px] px-4 py-3 bg-white border border-[var(--line)] rounded-[16px] text-[var(--ink)] placeholder-[var(--deep)]/30 focus:outline-none focus:border-[var(--green)] focus:ring-2 focus:ring-[var(--mint)] transition-colors"
-                placeholder="Your name"
-                disabled={loading}
-              />
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="firstName" className="mb-2 block text-sm font-semibold text-[var(--ink)]">First name</label>
+                <input
+                  id="firstName"
+                  type="text"
+                  autoComplete="given-name"
+                  required
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className="w-full min-h-[52px] px-4 py-3 bg-white border border-[var(--line)] rounded-[16px] text-[var(--ink)] placeholder-[var(--deep)]/30 focus:outline-none focus:border-[var(--green)] focus:ring-2 focus:ring-[var(--mint)] transition-colors"
+                  placeholder="John"
+                  disabled={loading}
+                />
+              </div>
+              <div>
+                <label htmlFor="lastName" className="mb-2 block text-sm font-semibold text-[var(--ink)]">Last name</label>
+                <input
+                  id="lastName"
+                  type="text"
+                  autoComplete="family-name"
+                  required
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  className="w-full min-h-[52px] px-4 py-3 bg-white border border-[var(--line)] rounded-[16px] text-[var(--ink)] placeholder-[var(--deep)]/30 focus:outline-none focus:border-[var(--green)] focus:ring-2 focus:ring-[var(--mint)] transition-colors"
+                  placeholder="Doe"
+                  disabled={loading}
+                />
+              </div>
             </div>
 
             <div>

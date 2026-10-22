@@ -48,7 +48,7 @@ export default function ServiceTiles({ openCategory }: { openCategory: (type: 'f
           <span className="service-no">03</span>
           <div className="service-art">
             <img 
-              src="https://images.unsplash.com/photo-1582284540020-8acbe03f4924?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=800" 
+              src="https://images.unsplash.com/photo-1582735689369-4fe89db7114c?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=800" 
               alt="Shopping essentials" 
               className="service-photo"
             />

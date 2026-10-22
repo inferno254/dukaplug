@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   description: 'Fast delivery of meals, groceries and essentials across Kenya. M-Pesa payments, live tracking.',
   keywords: ['DukaPlug', 'Kenya Delivery', 'Food Delivery', 'Grocery Delivery', 'M-Pesa'],
   icons: {
-    icon: '/favicon.jpg',
-    apple: '/favicon.jpg',
+    icon: '/dukaplug-dark-transparent.png',
+    apple: '/dukaplug-dark-transparent.png',
   },
   openGraph: {
     title: 'DukaPlug - On-Demand Meals, Groceries & Shopping',

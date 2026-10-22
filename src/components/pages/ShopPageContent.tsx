@@ -80,12 +80,30 @@ export default function ShopPageContent({ go }: { go: (p: string) => void }) {
 
   return (
     <main className="shop-page-shell">
+      <div className="browse-switch">
+        {(['food', 'groceries', 'shopping'] as const).map((item) => (
+          <button
+            key={item}
+            className={browseType === item ? 'active' : ''}
+            onClick={() => handleOpenCategory(item)}
+          >
+            {item === 'food' ? 'Food' : item === 'groceries' ? 'Groceries' : 'Shopping'}
+          </button>
+        ))}
+      </div>
       <section className="shop-title">
         <div>
           <h1>{config.heading}</h1>
           <p>{config.copy}</p>
         </div>
       </section>
+      <div className="menu-tabs">
+        {config.tabs.map((tab, i) => (
+          <button key={tab} className={i === 0 ? 'active' : ''}>
+            {tab}
+          </button>
+        ))}
+      </div>
       <div className="menu-list">
         {categoryProducts.length === 0 ? (
           <p className="empty-state">No products available in this category yet.</p>

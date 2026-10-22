@@ -4,10 +4,22 @@
 import { useState, useRef, useEffect } from 'react';
 import Icon from '@/components/ui/Icon';
 import { useAppContext } from '@/context/AppContext';
+import { useTheme } from '@/context/ThemeContext';
 
 interface Message {
   role: 'user' | 'assistant';
   content: string;
+}
+
+function setFavicon(theme: 'light' | 'dark') {
+  const href = theme === 'dark' ? '/dukaplug-dark-transparent.png' : '/dukaplug-logo-light.jpg';
+  let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
+  if (!link) {
+    link = document.createElement('link');
+    link.rel = 'icon';
+    document.head.appendChild(link);
+  }
+  link.href = href;
 }
 
 export default function AiAssistant() {
@@ -19,6 +31,11 @@ export default function AiAssistant() {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { location, cartCount } = useAppContext();
+  const { theme } = useTheme();
+
+  useEffect(() => {
+    setFavicon(theme);
+  }, [theme]);
 
   useEffect(() => {
     if (isOpen) {
@@ -45,9 +62,13 @@ export default function AiAssistant() {
         }),
       });
       const data = await res.json();
-      setMessages((prev) => [...prev, { role: 'assistant', content: data.reply || 'Pole, I ran into an error.' }]);
-    } catch {
-      setMessages((prev) => [...prev, { role: 'assistant', content: 'Connection error. Please try again.' }]);
+      if (!res.ok || data.error) {
+        setMessages((prev) => [...prev, { role: 'assistant', content: `Error: ${data.error || 'Server error (' + res.status + ')'}` }]);
+      } else {
+        setMessages((prev) => [...prev, { role: 'assistant', content: data.reply || 'Pole, empty response from AI.' }]);
+      }
+    } catch (err: any) {
+      setMessages((prev) => [...prev, { role: 'assistant', content: `Connection error: ${err.message || 'Failed to reach backend'}` }]);
     } finally {
       setLoading(false);
     }

@@ -23,13 +23,13 @@ export const metadata: Metadata = {
   description: 'Fast delivery of meals, groceries and essentials across Kenya. M-Pesa payments, live tracking.',
   keywords: ['DukaPlug', 'Kenya Delivery', 'Food Delivery', 'Grocery Delivery', 'M-Pesa'],
   icons: {
-    icon: '/dukaplug-dark-transparent.png',
-    apple: '/dukaplug-dark-transparent.png',
+    icon: '/dukaplug-logo-light.jpg',
+    apple: '/dukaplug-logo-light.jpg',
   },
   openGraph: {
     title: 'DukaPlug - On-Demand Meals, Groceries & Shopping',
     description: 'Hot meals cooked fresh, farm-crisp greens, and household essentials delivered fast.',
-    images: ['/dukaplug-logo.jpg'],
+    images: ['/dukaplug-logo-light.jpg'],
   },
 };
 

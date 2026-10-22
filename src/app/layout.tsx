@@ -33,6 +33,8 @@ export const metadata: Metadata = {
   },
 };
 
+import FaviconSwitcher from '@/components/ui/FaviconSwitcher';
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -41,7 +43,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${bricolage.variable} ${dmSans.variable}`}>
       <body className="font-sans antialiased">
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <FaviconSwitcher />
+        </Providers>
         <Analytics />
       </body>
     </html>

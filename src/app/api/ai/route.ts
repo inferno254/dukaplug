@@ -37,10 +37,18 @@ Be concise, friendly, and helpful. Suggest products, answer questions about deli
     });
 
     const data = await res.json();
-    const reply = data?.choices?.[0]?.message?.content || 'Sorry, I could not process that.';
+    
+    if (!res.ok) {
+      return NextResponse.json({ error: data.error?.message || `OpenRouter error: ${res.status}` }, { status: res.status });
+    }
+    
+    const reply = data?.choices?.[0]?.message?.content;
+    if (!reply) {
+      return NextResponse.json({ error: 'Empty response from AI', details: data }, { status: 500 });
+    }
 
     return NextResponse.json({ reply });
-  } catch (err) {
-    return NextResponse.json({ error: 'AI request failed' }, { status: 500 });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message || 'AI request failed' }, { status: 500 });
   }
 }

@@ -1,3 +1,4 @@
+// src/components/Hero.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -5,7 +6,6 @@ import { useLanguage } from '@/context/LanguageContext';
 import { useAppContext } from '@/context/AppContext';
 import Button from '@/components/ui/Button';
 import Icon from '@/components/ui/Icon';
-import FoodGlyph from '@/components/FoodGlyph';
 import Logo from '@/components/ui/Logo';
 
 export default function Hero({ go }: { go: (p: string) => void }) {
@@ -46,9 +46,27 @@ export default function Hero({ go }: { go: (p: string) => void }) {
       <div className="hero-visual">
         <span className="doodle d1">✦</span><span className="doodle d2">~</span>
         <div className="price-tag t1">KES 180</div><div className="price-tag t2">KES 95</div>
-        <div className="float-item item-burger"><FoodGlyph type="burger" /></div>
-        <div className="float-item item-tomato"><FoodGlyph type="tomato" /></div>
-        <div className="float-item item-drink"><FoodGlyph type="bottle" /></div>
+        <div className="float-item item-burger">
+          <img 
+            src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=400" 
+            alt="Food" 
+            className="float-photo"
+          />
+        </div>
+        <div className="float-item item-tomato">
+          <img 
+            src="https://images.unsplash.com/photo-1542838132-92c53300491e?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=400" 
+            alt="Groceries" 
+            className="float-photo"
+          />
+        </div>
+        <div className="float-item item-drink">
+          <img 
+            src="https://images.unsplash.com/photo-1607305387299-a3d9611cd469?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=400" 
+            alt="Shopping" 
+            className="float-photo"
+          />
+        </div>
         <div className="delivery-bag">
           <div className="bag-handle" />
           <Logo compact />

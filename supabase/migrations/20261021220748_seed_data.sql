@@ -17,7 +17,7 @@ ON CONFLICT (id) DO UPDATE SET
 -- Insert products for Mama Njeri's Kitchen (food)
 INSERT INTO products (id, vendor_id, name, description, price, category, image_url, is_available) VALUES
   ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', '11111111-1111-1111-1111-111111111111', 'Loaded nyama choma bowl', 'Charred beef, kachumbari, sukuma wiki and ugali with our house pili pili.', 680, 'food', 'https://images.unsplash.com/photo-1588168333986-5078d3ae3976?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=1200', true),
-  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', '11111111-1111-1111-1111-111111111111', 'Mama''s kuku special', 'Quarter chicken, chips, slaw & house sauce', 590, 'food', 'https://images.unsplash.com/photo-1781332150860-55b1eb6a38dd?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=900', true),
+  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', '11111111-1111-1111-1111-111111111111', 'Mama''s kuku special', 'Quarter chicken, chips, slaw & house sauce', 590, 'food', 'https://images.unsplash.com/photo-1700966358519-9944f220e554?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=900', true),
   ('cccccccc-cccc-cccc-cccc-cccccccccccc', '11111111-1111-1111-1111-111111111111', 'Chapati wrap', 'Soft chapati, spiced beef and fresh salsa', 360, 'food', 'https://images.unsplash.com/photo-1763951719372-966cd0b75672?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=900', true)
 ON CONFLICT (id) DO UPDATE SET
   vendor_id = EXCLUDED.vendor_id,
@@ -30,13 +30,13 @@ ON CONFLICT (id) DO UPDATE SET
 
 -- Insert products for Fresh Basket Rongai (groceries)
 INSERT INTO products (id, vendor_id, name, description, price, category, image_url, is_available) VALUES
-  ('dddddddd-dddd-dddd-dddd-dddddddddddd', '22222222-2222-2222-2222-222222222222', 'Tomatoes', 'Fresh ripe tomatoes per kg', 100, 'groceries', 'https://images.unsplash.com/photo-1582284540020-8acbe03f4924?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=900', true),
-  ('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', '22222222-2222-2222-2222-222222222222', 'Red onions', 'Fresh red onions per kg', 120, 'groceries', 'https://images.unsplash.com/photo-1683355739329-cea18ba93f02?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=900', true),
+  ('dddddddd-dddd-dddd-dddd-dddddddddddd', '22222222-2222-2222-2222-222222222222', 'Tomatoes', 'Fresh ripe tomatoes per kg', 100, 'groceries', 'https://images.unsplash.com/photo-1589824491095-8af9ma5ec5c5?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=900', true),
+  ('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', '22222222-2222-2222-2222-222222222222', 'Red onions', 'Fresh red onions per kg', 120, 'groceries', 'https://images.unsplash.com/photo-1683368982314-66b024dfe43d?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=900', true),
   ('ffffffff-ffff-ffff-ffff-ffffffffffff', '22222222-2222-2222-2222-222222222222', 'Sukuma wiki', 'Fresh sukuma wiki per bunch', 30, 'groceries', 'https://images.unsplash.com/photo-1777353245982-c34b21fc5175?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=900', true),
-  ('11111111-2222-3333-4444-555555555555', '22222222-2222-2222-2222-222222222222', 'Potatoes', 'Fresh potatoes per kg', 120, 'groceries', 'https://images.unsplash.com/photo-1597658939722-145d6439f1c5?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=900', true),
-  ('22222222-3333-4444-5555-666666666666', '22222222-2222-2222-2222-222222222222', 'Avocados', 'Fresh ripe avocados each', 30, 'groceries', 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=900', true),
-  ('33333333-4444-5555-6666-777777777777', '22222222-2222-2222-2222-222222222222', 'Bananas', 'Fresh bananas per kg', 150, 'groceries', 'https://images.unsplash.com/photo-1617483557130-b2a6869275c0?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=900', true),
-  ('44444444-5555-6666-7777-888888888888', '22222222-2222-2222-2222-222222222222', 'Milk', 'Fresh milk 500ml', 65, 'groceries', 'https://images.unsplash.com/photo-1506976785307-8732e854ad03?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=900', true),
+  ('11111111-2222-3333-4444-555555555555', '22222222-2222-2222-2222-222222222222', 'Potatoes', 'Fresh potatoes per kg', 120, 'groceries', 'https://images.unsplash.com/photo-1614213567040-66a96d804c5a?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=900', true),
+  ('22222222-3333-4444-5555-666666666666', '22222222-2222-2222-2222-222222222222', 'Avocados', 'Fresh ripe avocados each', 30, 'groceries', 'https://images.unsplash.com/photo-1618842081054-86e86137613f?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=900', true),
+  ('33333333-4444-5555-6666-777777777777', '22222222-2222-2222-2222-222222222222', 'Bananas', 'Fresh bananas per kg', 150, 'groceries', 'https://images.unsplash.com/photo-1526677818696-ee5b6d616546?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=900', true),
+  ('44444444-5555-6666-7777-888888888888', '22222222-2222-2222-2222-222222222222', 'Milk', 'Fresh milk 500ml', 65, 'groceries', 'https://images.unsplash.com/photo-1582984103225-99c4e2bb5155?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=900', true),
   ('55555555-6666-7777-8888-999999999999', '22222222-2222-2222-2222-222222222222', 'Eggs', 'Fresh eggs per tray', 450, 'groceries', 'https://images.unsplash.com/photo-1550583724-b2692b85b150?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=900', true)
 ON CONFLICT (id) DO UPDATE SET
   vendor_id = EXCLUDED.vendor_id,

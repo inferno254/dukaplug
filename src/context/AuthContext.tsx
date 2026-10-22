@@ -97,7 +97,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         const authUser: User = {
           id: data.user.id,
-          name: profile?.name || data.user.email?.split('@')[0] || 'User',
+          name: profile?.name || 'User',
           email: data.user.email || null,
           phone: profile?.phone || null,
           location: profile?.location || null,

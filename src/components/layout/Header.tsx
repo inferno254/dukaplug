@@ -40,11 +40,12 @@ export default function Header() {
           <span>{cartCount}</span>
         </button>
         {user ? (
-          <div className="profile-menu">
+          <div className="profile-menu" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <button
               className={`nav-profile-button ${page === 'profile' ? 'active' : ''}`}
               onClick={() => go('profile')}
               title={displayName || 'Account'}
+              style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
             >
               <span className="profile-avatar-mini">
                 {(displayName || '?').charAt(0).toUpperCase()}

@@ -51,6 +51,8 @@ h1, h2, h3, .logo { font-family: "Bricolage Grotesque", sans-serif; }
 .nav-profile-button.active { color: var(--deep); border-color: var(--deep); }
 .profile-avatar-mini { width: 34px; height: 34px; display: grid; place-items: center; color: var(--ink); background: var(--yellow); border: 2px solid var(--ink); border-radius: 50%; font-family: "Bricolage Grotesque", sans-serif; font-size: 16px; font-weight: 800; }
 .profile-name { font-size: 14px; }
+.logout-button { min-height: 46px; width: 46px; display: grid; place-items: center; color: var(--ink); background: transparent; border: 1px solid var(--ink); border-radius: 99px; cursor: pointer; }
+.logout-button:hover { color: var(--deep); border-color: var(--deep); }
 
 .btn { min-height: 52px; display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 0 24px; border: 1px solid transparent; border-radius: 99px; font-weight: 800; transition: transform .2s, box-shadow .2s; }
 .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 0 rgba(15,20,16,.12); }

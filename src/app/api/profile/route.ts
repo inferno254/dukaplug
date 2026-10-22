@@ -3,16 +3,25 @@ import { supabaseAdmin } from '@/lib/supabase';
 
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get('authorization');
-  const userId = authHeader?.replace('Bearer ', '');
+  const token = authHeader?.replace('Bearer ', '');
 
-  if (!userId) {
+  if (!token) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const {
+    data: { user },
+    error: authError,
+  } = await supabaseAdmin.auth.getUser(token);
+
+  if (authError || !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   const { data, error } = await supabaseAdmin
     .from('profiles')
     .select('*')
-    .eq('id', userId)
+    .eq('id', user.id)
     .maybeSingle();
 
   if (error) {
@@ -24,9 +33,18 @@ export async function GET(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   const authHeader = request.headers.get('authorization');
-  const userId = authHeader?.replace('Bearer ', '');
+  const token = authHeader?.replace('Bearer ', '');
 
-  if (!userId) {
+  if (!token) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const {
+    data: { user },
+    error: authError,
+  } = await supabaseAdmin.auth.getUser(token);
+
+  if (authError || !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -34,7 +52,7 @@ export async function PATCH(request: NextRequest) {
   const { data, error } = await supabaseAdmin
     .from('profiles')
     .update({ ...body, updated_at: new Date().toISOString() })
-    .eq('id', userId)
+    .eq('id', user.id)
     .select()
     .maybeSingle();
 

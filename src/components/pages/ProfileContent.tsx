@@ -1,8 +1,10 @@
+// src/components/pages/ProfileContent.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
 import { useAppContext } from '@/context/AppContext';
 import { useAuth } from '@/context/AuthContext';
+import { supabase } from '@/lib/supabase';
 import Icon from '@/components/ui/Icon';
 import Button from '@/components/ui/Button';
 
@@ -11,20 +13,65 @@ interface Profile {
   name: string;
   phone: string | null;
   email: string | null;
+  location: string | null;
+  location_detail: string | null;
   created_at: string;
 }
 
 export default function ProfileContent({ go }: { go: (p: string) => void }) {
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, logout } = useAuth();
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [phone, setPhone] = useState('');
+  const [location, setLocation] = useState('');
 
   useEffect(() => {
     if (!user) return;
-    fetch('/api/profile')
-      .then((r) => r.json())
-      .then((data) => setProfile(data))
-      .catch(() => {});
+    let cancelled = false;
+    const load = async () => {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData?.session?.access_token;
+      if (!token) return;
+      try {
+        const res = await fetch('/api/profile', {
+          headers: { authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+        if (!cancelled && data) {
+          setProfile(data);
+          setPhone(data.phone || '');
+          setLocation(data.location || '');
+        }
+      } catch {
+        // ignore
+      }
+    };
+    load();
+    return () => { cancelled = true; };
   }, [user]);
+
+  const handleSave = async () => {
+    if (!user) return;
+    setSaving(true);
+    const { data: sessionData } = await supabase.auth.getSession();
+    const token = sessionData?.session?.access_token;
+    if (!token) { setSaving(false); return; }
+    try {
+      const res = await fetch('/api/profile', {
+        method: 'PATCH',
+        headers: {
+          'content-type': 'application/json',
+          authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ phone, location, location_detail: 'Top Notch, Kitui' }),
+      });
+      const data = await res.json();
+      if (data) setProfile(data);
+    } catch {
+      // ignore
+    }
+    setSaving(false);
+  };
 
   if (authLoading) {
     return (
@@ -47,51 +94,80 @@ export default function ProfileContent({ go }: { go: (p: string) => void }) {
 
   const name = profile?.name || user.name || 'User';
   const initials = name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase();
-  const phone = profile?.phone || user.phone || '+254 712 345 678';
+  const phoneDisplay = profile?.phone || user.phone || '+254 712 345 678';
 
   return (
     <main className="profile-page">
-      <section className="profile-card">
+      <div className="profile-card">
         <div className="profile-avatar">{initials}</div>
         <div>
-          <span className="kicker">KARIBU BACK</span>
+          <span className="kicker">My account</span>
           <h1>{name}</h1>
-          <p>{phone}</p>
+          <p>{profile?.email || user.email || 'No email'}</p>
+          <Button variant="yellow" onClick={logout}>Log out</Button>
         </div>
-        <button>Edit profile</button>
-      </section>
+      </div>
+
       <div className="profile-grid">
         <section>
-          <h2>Your DukaPlug</h2>
-          {[
-            ["pin", "Saved addresses", "Home, Campus"],
-            ["receipt", "Order history", "View past orders"],
-            ["heart", "Favourite shops", "Saved spots"],
-          ].map(([icon, title, copy]) => (
-            <button key={title} className="profile-link">
-              <span><Icon name={icon} /></span>
-              <div>
-                <b>{title}</b>
-                <small>{copy}</small>
-              </div>
-              <Icon name="chevron" />
-            </button>
-          ))}
-        </section>
-        <section className="recent-orders">
-          <h2>Recent order</h2>
-          <div className="recent-card">
-            <img src="https://images.unsplash.com/photo-1726177974666-88e937fa8e59?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=1200" alt="" />
+          <h3>Account details</h3>
+          <div className="profile-link">
+            <span><Icon name="user" /></span>
             <div>
-              <span className="delivered">Delivered</span>
-              <h3>Mama Njeri's Kitchen</h3>
-              <p>2 items · KES 860</p>
-              <small>Saturday, 12:58 PM</small>
-              <Button variant="ghost" onClick={() => go('/shop')}>
-                Order again
-              </Button>
+              <b>Full name</b>
+              <small>{name}</small>
             </div>
           </div>
+          <div className="profile-link">
+            <span><Icon name="mail" /></span>
+            <div>
+              <b>Email</b>
+              <small>{profile?.email || user.email || '—'}</small>
+            </div>
+          </div>
+          <div className="profile-link">
+            <span><Icon name="phone" /></span>
+            <div>
+              <b>Phone</b>
+              <small>{phoneDisplay}</small>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3>Delivery location</h3>
+          <div className="profile-link">
+            <span><Icon name="pin" /></span>
+            <div>
+              <b>Current</b>
+              <small>{profile?.location_detail || profile?.location || 'Top Notch, Kitui'}</small>
+            </div>
+          </div>
+          <label className="profile-link">
+            <span><Icon name="pin" /></span>
+            <div>
+              <b>Location</b>
+              <input
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                style={{ background: 'transparent', border: 'none', color: 'inherit', width: '100%' }}
+              />
+            </div>
+          </label>
+          <label className="profile-link">
+            <span><Icon name="phone" /></span>
+            <div>
+              <b>Phone</b>
+              <input
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                style={{ background: 'transparent', border: 'none', color: 'inherit', width: '100%' }}
+              />
+            </div>
+          </label>
+          <Button variant="yellow" onClick={handleSave} disabled={saving} className="w-full mt-3">
+            {saving ? 'Saving...' : 'Save changes'}
+          </Button>
         </section>
       </div>
     </main>

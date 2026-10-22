@@ -1,19 +1,20 @@
+// src/components/layout/Header.tsx
 'use client';
 
 import Logo from '@/components/ui/Logo';
 import Icon from '@/components/ui/Icon';
-import Button from '@/components/ui/Button';
 import ThemeToggle from '@/components/ui/ThemeToggle';
 import LanguageToggle from '@/components/ui/LanguageToggle';
 import { useAppContext } from '@/context/AppContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
+import { useState } from 'react';
 
 export default function Header() {
   const { page, go, cartCount, location, openLocation } = useAppContext();
   const { user, logout } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  // Smart name display: first name only, fallback to email prefix
   const displayName = user?.name
     ? user.name.split(' ')[0]
     : user?.email
@@ -49,16 +50,26 @@ export default function Header() {
           <span>{cartCount}</span>
         </button>
         {user ? (
-          <button
-            className={`nav-profile-button ${page === 'profile' ? 'active' : ''}`}
-            onClick={() => go('profile')}
-            title={user.name || displayName || 'Account'}
-          >
-            <span className="profile-avatar-mini">
-              {(displayName || '?').charAt(0).toUpperCase()}
-            </span>
-            <span className="profile-name">{displayName || 'Account'}</span>
-          </button>
+          <div className="profile-menu" style={{ position: 'relative' }}>
+            <button
+              className={`nav-profile-button ${page === 'profile' ? 'active' : ''}`}
+              onClick={() => { go('profile'); setMenuOpen(false); }}
+              title={user.name || displayName || 'Account'}
+            >
+              <span className="profile-avatar-mini">
+                {(displayName || '?').charAt(0).toUpperCase()}
+              </span>
+              <span className="profile-name">{displayName || 'Account'}</span>
+            </button>
+            <button
+              className="logout-button"
+              onClick={() => { logout(); setMenuOpen(false); }}
+              title="Log out"
+              aria-label="Log out"
+            >
+              <Icon name="logout" size={18} />
+            </button>
+          </div>
         ) : (
           <a className="login-button" href="/login">
             Log in

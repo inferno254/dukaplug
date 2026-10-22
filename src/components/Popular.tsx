@@ -16,12 +16,12 @@ interface Vendor {
   created_at: string;
 }
 
-// Map vendor IDs to specific restaurant images
+// Map vendor IDs to specific restaurant images (Kenya-appropriate)
 const vendorImages: Record<string, string> = {
-  '11111111-1111-1111-1111-111111111111': 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=1200', // Mama Njeri's Kitchen - Kenyan nyama choma place
-  '22222222-2222-2222-2222-222222222222': 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=1200', // Fresh Basket Rongai - grocery market
-  '33333333-3333-3333-3333-333333333333': 'https://images.unsplash.com/photo-1495118732994-03c0d555498b?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=1200', // The Daily Feast - daily meals
-  '44444444-4444-4444-4444-444444444444': 'https://images.unsplash.com/photo-1607305387299-a3d9611cd469?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=1200', // Duka Essentials - shopping
+  '11111111-1111-1111-1111-111111111111': 'https://images.unsplash.com/photo-1622051579890-c5a2e8e5e1b1?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=1200', // Kenyan nyama choma place
+  '22222222-2222-2222-2222-222222222222': 'https://images.unsplash.com/photo-1582284540020-8acbe03f4924?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=1200', // African market produce stall
+  '33333333-3333-3333-3333-333333333333': 'https://images.unsplash.com/photo-1628840042765-356cda07504e?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=1200', // Kenyan daily meals
+  '44444444-4444-4444-4444-444444444444': 'https://images.unsplash.com/photo-1607305387299-a3d9611cd469?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=1200', // Duka Essentials - household shopping
 };
 
 export default function Popular({ go }: { go: (p: string) => void }) {

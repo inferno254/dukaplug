@@ -22,7 +22,7 @@ export default function ServiceTiles({ openCategory }: { openCategory: (type: 'f
           <span className="service-no">01</span>
           <div className="service-art">
             <img 
-              src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=800" 
+              src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=800" 
               alt="Food delivery" 
               className="service-photo"
             />
@@ -48,7 +48,7 @@ export default function ServiceTiles({ openCategory }: { openCategory: (type: 'f
           <span className="service-no">03</span>
           <div className="service-art">
             <img 
-              src="https://images.unsplash.com/photo-1607305387299-a3d9611cd469?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=800" 
+              src="https://images.unsplash.com/photo-1582284540020-8acbe03f4924?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=800" 
               alt="Shopping essentials" 
               className="service-photo"
             />

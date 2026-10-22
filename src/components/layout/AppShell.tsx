@@ -1,7 +1,6 @@
 'use client';
 
 import { ReactNode } from 'react';
-import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import BottomNav from '@/components/layout/BottomNav';
 import LocationSheet from '@/components/LocationSheet';
@@ -25,7 +24,6 @@ export default function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="app">
-      <Header />
       {children}
       {showFooter && <Footer />}
       <BottomNav />

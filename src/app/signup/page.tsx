@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import Button from '@/components/ui/Button';
 import Logo from '@/components/ui/Logo';
+import Header from '@/components/layout/Header';
 
 export default function SignupPage() {
   const [email, setEmail] = useState('');
@@ -49,7 +50,9 @@ export default function SignupPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-6 py-20 bg-[var(--cream)] relative overflow-hidden">
+    <div className="min-h-screen flex flex-col bg-[var(--cream)]">
+      <Header />
+      <main className="flex-1 flex items-center justify-center px-6 py-20 relative overflow-hidden">
       {/* Background pattern */}
       <div className="absolute inset-0" style={{ backgroundImage: 'linear-gradient(rgba(15,20,16,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(15,20,16,.04) 1px,transparent 1px)', backgroundSize: '60px 60px' }} />
 
@@ -177,6 +180,7 @@ export default function SignupPage() {
           </p>
         </div>
       </div>
-    </main>
+      </main>
+    </div>
   );
 }

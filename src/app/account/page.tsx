@@ -4,6 +4,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import Header from "@/components/layout/Header";
 
 export default function AccountPage() {
   const { user, logout } = useAuth();
@@ -22,7 +23,9 @@ export default function AccountPage() {
   }
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-[#0B0F0A] text-[#F6F4EC] p-6">
+    <div className="min-h-screen flex flex-col bg-[#0B0F0A]">
+      <Header />
+      <main className="flex-1 flex flex-col items-center justify-center text-[#F6F4EC] p-6">
       <div className="flex flex-col items-center space-y-4 mb-8">
         <img
           src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200&crop=faces&fit=crop"
@@ -38,7 +41,8 @@ export default function AccountPage() {
       >
         Logout
       </button>
-    </main>
+      </main>
+    </div>
   );
 }
 

@@ -79,7 +79,7 @@ export default function ShopPageContent({ go }: { go: (p: string) => void }) {
   }
 
   return (
-    <main className="page-shell">
+    <main className="shop-page-shell">
       <section className="shop-title">
         <div>
           <h1>{config.heading}</h1>

@@ -16,7 +16,7 @@ ON CONFLICT (id) DO UPDATE SET
 
 -- Insert products for Mama Njeri's Kitchen (food)
 INSERT INTO products (id, vendor_id, name, description, price, category, image_url, is_available) VALUES
-  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', '11111111-1111-1111-1111-111111111111', 'Loaded nyama choma bowl', 'Charred beef, kachumbari, sukuma wiki and ugali with our house pili pili.', 680, 'food', 'https://images.unsplash.com/photo-1726177974666-88e937fa8e59?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=1200', true),
+  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', '11111111-1111-1111-1111-111111111111', 'Loaded nyama choma bowl', 'Charred beef, kachumbari, sukuma wiki and ugali with our house pili pili.', 680, 'food', 'https://images.unsplash.com/photo-1588168333986-5078d3ae3976?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=1200', true),
   ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', '11111111-1111-1111-1111-111111111111', 'Mama''s kuku special', 'Quarter chicken, chips, slaw & house sauce', 590, 'food', 'https://images.unsplash.com/photo-1781332150860-55b1eb6a38dd?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=900', true),
   ('cccccccc-cccc-cccc-cccc-cccccccccccc', '11111111-1111-1111-1111-111111111111', 'Chapati wrap', 'Soft chapati, spiced beef and fresh salsa', 360, 'food', 'https://images.unsplash.com/photo-1763951719372-966cd0b75672?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=900', true)
 ON CONFLICT (id) DO UPDATE SET

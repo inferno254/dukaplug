@@ -33,6 +33,8 @@ export default function Header() {
         <span>^.^</span>
       </button>
       <nav className="desktop-nav">
+        <ThemeToggle />
+        <LanguageToggle />
         <button className="cart-button" onClick={() => go('checkout')}>
           <Icon name="cart" />
           <span>{cartCount}</span>
@@ -63,8 +65,6 @@ export default function Header() {
             Log in
           </a>
         )}
-        <ThemeToggle />
-        <LanguageToggle />
       </nav>
     </header>
   );

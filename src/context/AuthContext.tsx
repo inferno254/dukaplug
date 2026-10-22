@@ -1,7 +1,7 @@
 // src/context/AuthContext.tsx
 'use client';
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 
@@ -71,10 +71,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const clearAuth = () => {
+  const clearAuth = useCallback(() => {
     localStorage.removeItem('authUser');
     setUser(null);
-  };
+  }, []);
 
   const login = async (email: string, password: string): Promise<{ error?: string }> => {
     try {

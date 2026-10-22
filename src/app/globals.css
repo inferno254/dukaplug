@@ -98,8 +98,9 @@ h1, h2, h3, .logo { font-family: "Bricolage Grotesque", sans-serif; }
 .hero-sticker b { font-size: 22px; }
 .float-photo { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
 .float-item, .price-tag, .phone-card { position: absolute; opacity: 0; transition: all .7s cubic-bezier(.2,.9,.2,1.2); }
-.float-item { width: 105px; height: 105px; display: grid; place-items: center; background: var(--cream); border: 3px solid var(--ink); border-radius: 50%; }
+.float-item { width: 105px; height: 105px; display: grid; place-items: center; background: var(--cream); border: 3px solid var(--ink); border-radius: 50%; overflow: hidden; }
 .item-burger { left: 0; top: 8%; transform: rotate(-14deg) scale(.5); }.item-tomato { right: 3%; bottom: 14%; transform: rotate(8deg) scale(.5); }.item-drink { left: 10%; bottom: 5%; transform: rotate(12deg) scale(.5); }
+.hero-burst .item-burger { transform: rotate(-14deg) scale(1); }
 .price-tag { z-index: 4; width: 72px; height: 72px; color: var(--ink); background: var(--yellow); border: 2px solid var(--ink); border-radius: 50%; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; text-align: center; padding: 0; }
 .t1 { left: 3%; top: 31%; }.t2 { right: 5%; top: 29%; }
 .hero-burst .float-item, .hero-burst .price-tag { opacity: 1; transform: rotate(-8deg) scale(1); }

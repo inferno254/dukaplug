@@ -1,5 +1,6 @@
 ﻿@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=DM+Sans:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
+@import "./ai-widget.css";
 
 :root {
   --green: #12b76a;

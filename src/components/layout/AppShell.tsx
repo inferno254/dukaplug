@@ -6,6 +6,7 @@ import Footer from '@/components/layout/Footer';
 import BottomNav from '@/components/layout/BottomNav';
 import LocationSheet from '@/components/LocationSheet';
 import ItemSheet from '@/components/ItemSheet';
+import AiAssistant from '@/components/AiAssistant';
 import { useAppContext } from '@/context/AppContext';
 
 export default function AppShell({ children }: { children: ReactNode }) {
@@ -28,6 +29,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
       {children}
       {showFooter && <Footer />}
       <BottomNav />
+      <AiAssistant />
       {sheet && <ItemSheet close={closeSheet} add={addItem} />}
       {showLocation && (
         <LocationSheet

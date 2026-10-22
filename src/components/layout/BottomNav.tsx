@@ -15,7 +15,7 @@ export default function BottomNav() {
   ];
 
   return (
-    <nav className="bottom-nav">
+    <nav className="bottom-nav" style={{ display: 'flex' }}>
       {items.map(([p, icon, label]) => (
         <button
           key={p}

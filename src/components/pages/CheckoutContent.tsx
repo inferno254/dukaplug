@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAppContext } from '@/context/AppContext';
 import { useCartContext } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
@@ -13,10 +13,14 @@ export default function CheckoutContent({ go }: { go: (p: string) => void }) {
   const { items, addItem, removeItem, updateQuantity, clearCart } = useCartContext();
   const { user } = useAuth();
 
-  const [stage, setStage] = useState<'details' | 'paying' | 'success'>('details');
+  const [stage, setStage] = useState<'details' | 'paying' | 'polling' | 'success' | 'failed'>('details');
   const [tip, setTip] = useState(0);
   const [phone, setPhone] = useState(user?.phone || '712 345 678');
   const [processing, setProcessing] = useState(false);
+  const [orderId, setOrderId] = useState<string | null>(null);
+  const [checkoutRequestId, setCheckoutRequestId] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const pollInterval = useRef<NodeJS.Timeout | null>(null);
 
   const subtotal = items.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
@@ -24,9 +28,48 @@ export default function CheckoutContent({ go }: { go: (p: string) => void }) {
   );
   const total = subtotal + tip;
 
+  const pollPaymentStatus = async (checkoutId: string) => {
+    try {
+      const res = await fetch(`/api/mpesa/status?checkoutRequestId=${checkoutId}`);
+      const data = await res.json();
+      if (data.status === 'success') {
+        stopPolling();
+        setStage('success');
+        clearCart();
+        // Trigger email receipt (will be handled by API)
+        fetch('/api/orders/receipt', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderId: data.orderId, email: user?.email }),
+        });
+      } else if (data.status === 'failed' || data.status === 'cancelled') {
+        stopPolling();
+        setStage('failed');
+        setErrorMsg(data.message || 'Payment failed or was cancelled');
+      }
+    } catch (err) {
+      console.error('Poll error:', err);
+    }
+  };
+
+  const startPolling = (checkoutId: string) => {
+    setStage('polling');
+    pollInterval.current = setInterval(() => pollPaymentStatus(checkoutId), 3000);
+  };
+
+  const stopPolling = () => {
+    if (pollInterval.current) {
+      clearInterval(pollInterval.current);
+      pollInterval.current = null;
+    }
+  };
+
+  useEffect(() => () => stopPolling(), []);
+
   const handlePay = async () => {
     if (items.length === 0) return;
     setProcessing(true);
+    setErrorMsg(null);
     setStage('paying');
 
     try {
@@ -48,31 +91,36 @@ export default function CheckoutContent({ go }: { go: (p: string) => void }) {
         }),
       });
 
-      if (!orderRes.ok) {
-        console.error('Failed to create order');
+      const orderData = await orderRes.json();
+      if (!orderRes.ok || !orderData.id) {
+        throw new Error(orderData.error || 'Failed to create order');
       }
+      setOrderId(orderData.id);
 
       // Initiate STK Push
       const stkRes = await fetch('/api/mpesa/stkpush', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone, amount: total, orderId: orderRes.ok ? (await orderRes.json()).id : undefined }),
+        body: JSON.stringify({ phone, amount: total, orderId: orderData.id }),
       });
 
-      if (!stkRes.ok) {
-        console.error('STK Push failed');
+      const stkData = await stkRes.json();
+      if (!stkRes.ok || !stkData.checkoutRequestId) {
+        throw new Error(stkData.error || 'STK Push failed');
       }
-    } catch (err) {
-      console.error('Payment error:', err);
-    }
 
-    // Simulate payment processing
-    setTimeout(() => {
-      setStage('success');
+      setCheckoutRequestId(stkData.checkoutRequestId);
+      startPolling(stkData.checkoutRequestId);
+
+    } catch (err: any) {
+      console.error('Payment error:', err);
+      setErrorMsg(err.message || 'Payment failed. Please try again.');
+      setStage('failed');
       setProcessing(false);
-    }, 1800);
+    }
   };
 
+  // Success stage with real order details
   if (stage === 'success') {
     return (
       <main className="success-page">
@@ -82,27 +130,50 @@ export default function CheckoutContent({ go }: { go: (p: string) => void }) {
         </div>
         <span className="kicker">PLUGGED IN!</span>
         <h1>Order confirmed.</h1>
-        <p>Mama Njeri's is preparing your food.<br />Your rider will be with you soon.</p>
-        <div className="order-number">Order #DP2408 <b>ETA 24 min</b></div>
-        <Button
-          onClick={() => go('/')}
-          icon="arrow"
-        >
+        <p>Your order has been paid and confirmed. The vendor is preparing it.</p>
+        <div className="order-number">
+          <span>Order #{orderId?.slice(0, 8).toUpperCase()}</span>
+          <b>Check email for receipt</b>
+        </div>
+        <div className="receipt-box">
+          <h4>Receipt</h4>
+          <p>M-Pesa payment confirmed</p>
+          <p>Total: KES {total}</p>
+          <p>Delivery: {location.name}</p>
+        </div>
+        <Button onClick={() => go('/tracking')} icon="arrow">
           Track my order
         </Button>
-        <button className="text-link" onClick={() => go('/')}>
+        <Button variant="ghost" onClick={() => go('/')}>
           Back home
-        </button>
+        </Button>
+      </main>
+    );
+  }
+
+  if (stage === 'failed') {
+    return (
+      <main className="checkout-page">
+        <div className="checkout-grid">
+          <section>
+            <span className="kicker">PAYMENT FAILED</span>
+            <h1>Something went wrong.</h1>
+            <p className="error-text">{errorMsg}</p>
+            <Button variant="yellow" onClick={() => setStage('details')}>
+              Try again
+            </Button>
+            <Button variant="ghost" onClick={() => go('/shop')}>
+              Back to menu
+            </Button>
+          </section>
+        </div>
       </main>
     );
   }
 
   return (
     <main className="checkout-page">
-      <button
-        className="plain-back"
-        onClick={() => go('/shop')}
-      >
+      <button className="plain-back" onClick={() => go('/shop')}>
         ← Back to menu
       </button>
       <div className="checkout-grid">
@@ -117,10 +188,7 @@ export default function CheckoutContent({ go }: { go: (p: string) => void }) {
                 <p>Where should we bring it?</p>
               </div>
             </div>
-            <button
-              className="address-card"
-              onClick={openLocation}
-            >
+            <button className="address-card" onClick={openLocation}>
               <Icon name="pin" />
               <span>
                 <b>{location.name}</b>
@@ -142,11 +210,7 @@ export default function CheckoutContent({ go }: { go: (p: string) => void }) {
               </div>
             </div>
             <label className="payment-option selected">
-              <input
-                type="radio"
-                defaultChecked
-                name="pay"
-              />
+              <input type="radio" defaultChecked name="pay" />
               <b className="mpesa">M</b>
               <span>
                 <strong>M-Pesa</strong>
@@ -183,82 +247,39 @@ export default function CheckoutContent({ go }: { go: (p: string) => void }) {
             <>
               {items.map((item) => (
                 <div className="summary-item" key={item.product.id}>
-                  <img
-                    src={item.product.image_url || 'https://images.unsplash.com/photo-1726177974666-88e937fa8e59?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=1200'}
-                    alt={item.product.name}
-                  />
+                  <img src={item.product.image_url || 'https://images.unsplash.com/photo-1726177974666-88e937fa8e59?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=1200'} alt={item.product.name} />
                   <span>
                     <b>{item.product.name}</b>
-                    <small>
-                      {item.quantity} × KES {item.product.price}
-                    </small>
+                    <small>{item.quantity} × KES {item.product.price}</small>
                   </span>
                   <div className="qty-controls">
-                    <button
-                      aria-label="Decrease"
-                      onClick={() =>
-                        updateQuantity(item.product, item.quantity - 1)
-                      }
-                    >
-                      −
-                    </button>
+                    <button aria-label="Decrease" onClick={() => updateQuantity(item.product, item.quantity - 1)}>−</button>
                     <span>{item.quantity}</span>
-                    <button
-                      aria-label="Increase"
-                      onClick={() =>
-                        updateQuantity(item.product, item.quantity + 1)
-                      }
-                    >
-                      +
-                    </button>
+                    <button aria-label="Increase" onClick={() => updateQuantity(item.product, item.quantity + 1)}>+</button>
                   </div>
                 </div>
               ))}
             </>
           )}
-          <label className="promo">
-            <input placeholder="Promo code" />
-            <button>Apply</button>
-          </label>
+          <label className="promo"><input placeholder="Promo code" /><button>Apply</button></label>
           <div className="tip-row">
             <span>Rider tip</span>
             {[0, 50, 100].map((n) => (
-              <button
-                key={n}
-                className={tip === n ? 'active' : ''}
-                onClick={() => setTip(n)}
-              >
-                KES {n}
-              </button>
+              <button key={n} className={tip === n ? 'active' : ''} onClick={() => setTip(n)}>KES {n}</button>
             ))}
           </div>
           <div className="totals">
-            <p>
-              <span>Subtotal</span>
-              <b>KES {subtotal}</b>
-            </p>
-            <p>
-              <span>Delivery</span>
-              <b className="free">FREE</b>
-            </p>
-            <p className="grand">
-              <span>Total</span>
-              <b>KES {total}</b>
-            </p>
+            <p><span>Subtotal</span><b>KES {subtotal}</b></p>
+            <p><span>Delivery</span><b className="free">FREE</b></p>
+            <p className="grand"><span>Total</span><b>KES {total}</b></p>
           </div>
-          <Button
-            variant="yellow"
-            disabled={items.length === 0 || processing}
-            onClick={handlePay}
-          >
-            {stage === 'paying'
-              ? 'Waiting for M-Pesa...'
-              : `Pay KES ${total}`}
+          <Button variant="yellow" disabled={items.length === 0 || processing} onClick={handlePay}>
+            {stage === 'paying' ? 'Sending STK Push...' : stage === 'polling' ? 'Waiting for payment...' : `Pay KES ${total}`}
           </Button>
-          {stage === 'paying' && (
+          {(stage === 'paying' || stage === 'polling') && (
             <div className="waiting">
-              <span />
-              <p>Check your phone and enter your M-Pesa PIN.</p>
+              <span className="spinner" />
+              <p>{stage === 'paying' ? 'Sending STK push to your phone...' : 'Waiting for you to enter M-Pesa PIN...'}</p>
             </div>
           )}
         </aside>

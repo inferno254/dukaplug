@@ -50,15 +50,7 @@ export default function Header() {
   return (
     <header className="header">
       <button className="brand-button" onClick={() => go('home')}>
-        <Logo />
-      </button>
-      <button className="location-pill" onClick={openLocation}>
-        <Icon name="pin" size={18} />
-        <span>
-          <small>Delivering to</small>
-          {location.name}
-        </span>
-        <span>^.^</span>
+        <Logo compact={true} />
       </button>
       <div className="nav-search" ref={dropdownRef} style={{ position: 'relative' }}>
         <Icon name="search" />

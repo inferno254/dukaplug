@@ -80,95 +80,31 @@ export default function ShopPageContent({ go }: { go: (p: string) => void }) {
 
   return (
     <main className="page-shell">
-      <div className="browse-switch">
-        {(['food', 'groceries', 'shopping'] as const).map((item) => (
-          <button
-            key={item}
-            className={browseType === item ? 'active' : ''}
-            onClick={() => handleOpenCategory(item)}
-          >
-            {item === 'food' ? 'Food' : item === 'groceries' ? 'Groceries' : 'Shopping'}
-          </button>
-        ))}
-      </div>
       <section className="shop-title">
         <div>
-          <span className="kicker">{config.kicker}</span>
-          <h1>{categoryProducts[0]?.vendor?.name || 'Shop'}</h1>
-          <p>{categoryProducts[0]?.vendor?.location || 'Local'}</p>
-          <div className="shop-stats">
-            <span><Icon name="star" size={16} /> {categoryProducts[0]?.vendor?.rating || 4.9} ({categoryProducts.length}+)</span>
-            <span><Icon name="clock" size={16} /> 15–25 min</span>
-            <span>Free delivery</span>
-          </div>
-        </div>
-        <button className="heart big"><Icon name="heart" /></button>
-      </section>
-      <nav className="menu-tabs">
-        {config.tabs.map((tab, i) => (
-          <button key={tab} className={i === 0 ? 'active' : ''}>
-            {tab}
-          </button>
-        ))}
-      </nav>
-      <section className="menu-layout">
-        <div>
-          <h2>{config.heading}</h2>
+          <h1>{config.heading}</h1>
           <p>{config.copy}</p>
-          <div className="menu-list">
-            {categoryProducts.length === 0 ? (
-              <p className="empty-state">No products available in this category yet.</p>
-            ) : (
-              categoryProducts.map((item) => (
-                <ProductCard
-                  key={item.id}
-                  item={{
-                    name: item.name,
-                    desc: item.description || '',
-                    price: item.price,
-                    image: item.image_url || 'https://images.unsplash.com/photo-1726177974666-88e937fa8e59?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=1200',
-                  }}
-                  onAdd={() => handleAdd(item)}
-                />
-              ))
-            )}
-          </div>
         </div>
-        <aside className="desktop-cart">
-          <span className="kicker">YOUR ORDER</span>
-          <h2>{cartCount > 0 ? 'Good choice.' : 'Your cart is empty'}</h2>
-          {items.length === 0 ? (
-            <p className="empty-cart-hint">Add items from the menu to get started.</p>
-          ) : (
-            <>
-              {items.map((item) => (
-                <div className="cart-line" key={item.product.id}>
-                  <span>{item.quantity}× {item.product.name}</span>
-                  <b>KES {item.product.price * item.quantity}</b>
-                </div>
-              ))}
-              <hr />
-              <div className="cart-line total">
-                <span>Total</span>
-                <b>KES {cartTotal}</b>
-              </div>
-              <Button variant="yellow" onClick={() => go('/checkout')}>
-                Go to checkout
-              </Button>
-            </>
-          )}
-        </aside>
       </section>
-      {cartCount > 0 && (
-        <button
-          className="mobile-cart-bar"
-          onClick={() => go('/checkout')}
-        >
-          <span>{cartCount} {cartCount === 1 ? 'item' : 'items'}</span>
-          <b>View cart · KES {cartTotal}</b>
-          <Icon name="arrow" />
-        </button>
-      )}
+      <div className="menu-list">
+        {categoryProducts.length === 0 ? (
+          <p className="empty-state">No products available in this category yet.</p>
+        ) : (
+          categoryProducts.map((item) => (
+            <ProductCard
+              key={item.id}
+              item={{
+                id: item.id,
+                name: item.name,
+                desc: item.description || '',
+                price: item.price,
+                image: item.image_url || 'https://images.unsplash.com/photo-1588168333986-5078d3ae3976?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=800',
+              }}
+              onAdd={() => handleAdd(item)}
+            />
+          ))
+        )}
+      </div>
     </main>
   );
 }

@@ -32,13 +32,23 @@ export default function TrackingContent({ go }: { go: (p: string) => void }) {
       return;
     }
 
-    fetch('/api/orders/active')
-      .then((r) => r.json())
-      .then((data) => {
-        setTracking(data);
-        setLoading(false);
+    const fetchTracking = () => {
+      fetch('/api/orders/active', {
+        headers: user?.id ? { Authorization: `Bearer ${user.id}` } : {},
       })
-      .catch(() => setLoading(false));
+        .then((r) => r.json())
+        .then((data) => {
+          setTracking(data);
+          setLoading(false);
+        })
+        .catch(() => setLoading(false));
+    };
+
+    fetchTracking();
+
+    // Poll for updates every 5 seconds
+    const interval = setInterval(fetchTracking, 5000);
+    return () => clearInterval(interval);
   }, [user]);
 
   if (loading) {

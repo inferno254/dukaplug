@@ -47,8 +47,8 @@ export default function ServiceTiles({ openCategory }: { openCategory: (type: 'f
         <button className="service-card shopping-card" onClick={() => openCategory("shopping")}>
           <span className="service-no">03</span>
           <div className="service-art">
-            <img 
-              src="https://images.unsplash.com/photo-1582735689369-4fe89db7114c?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=800" 
+<img 
+              src="https://images.unsplash.com/photo-1607305387299-a3d9611cd469?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=800" 
               alt="Shopping essentials" 
               className="service-photo"
             />

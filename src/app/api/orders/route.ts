@@ -41,6 +41,25 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  // Ensure user profile exists before creating order
+  const { data: existingProfile } = await supabaseAdmin
+    .from('profiles')
+    .select('id')
+    .eq('id', userId)
+    .maybeSingle();
+
+  if (!existingProfile) {
+    // Auto-create profile if missing
+    await supabaseAdmin.from('profiles').insert({
+      id: userId,
+      name: 'Customer',
+      email: null,
+      phone: null,
+      location: 'HQ · Kitui',
+      location_detail: 'DukaPlug HQ, Top Notch, Kitui',
+    });
+  }
+
   const body = await request.json();
   const { items, vendorId, deliveryAddress, deliveryLocation, paymentMethod, phone, total } = body;
 

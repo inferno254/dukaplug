@@ -15,8 +15,15 @@ export default function CheckoutContent({ go }: { go: (p: string) => void }) {
 
   const [stage, setStage] = useState<'details' | 'paying' | 'polling' | 'success' | 'failed'>('details');
   const [tip, setTip] = useState(0);
-  const [phone, setPhone] = useState(user?.phone || '712 345 678');
+  const [phone, setPhone] = useState(user?.phone || '');
   const [processing, setProcessing] = useState(false);
+
+  const formatPhone = (p: string) => {
+    const cleaned = p.replace(/\s+/g, '').replace(/^\+/, '');
+    if (cleaned.startsWith('254')) return cleaned;
+    if (cleaned.startsWith('0')) return `254${cleaned.slice(1)}`;
+    return `254${cleaned}`;
+  };
   const [orderId, setOrderId] = useState<string | null>(null);
   const [checkoutRequestId, setCheckoutRequestId] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -86,7 +93,7 @@ export default function CheckoutContent({ go }: { go: (p: string) => void }) {
           deliveryAddress: location.detail,
           deliveryLocation: location.name,
           paymentMethod: 'mpesa',
-          phone,
+          phone: formatPhone(phone),
           total,
         }),
       });
@@ -98,10 +105,11 @@ export default function CheckoutContent({ go }: { go: (p: string) => void }) {
       setOrderId(orderData.id);
 
       // Initiate STK Push
+      const formattedPhone = formatPhone(phone);
       const stkRes = await fetch('/api/mpesa/stkpush', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone, amount: total, orderId: orderData.id }),
+        body: JSON.stringify({ phone: formattedPhone, amount: total, orderId: orderData.id }),
       });
 
       const stkData = await stkRes.json();
@@ -222,6 +230,7 @@ export default function CheckoutContent({ go }: { go: (p: string) => void }) {
               <input
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
+                placeholder="712 345 678"
                 aria-label="M-Pesa phone number"
                 autoComplete="off"
                 inputMode="numeric"

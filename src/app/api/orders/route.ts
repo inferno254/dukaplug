@@ -42,15 +42,19 @@ export async function POST(request: NextRequest) {
   }
 
   // Ensure user profile exists before creating order
-  const { data: existingProfile } = await supabaseAdmin
+  const { data: existingProfile, error: profileCheckError } = await supabaseAdmin
     .from('profiles')
     .select('id')
     .eq('id', userId)
     .maybeSingle();
 
+  if (profileCheckError) {
+    console.error('Profile check error:', profileCheckError);
+  }
+
   if (!existingProfile) {
     // Auto-create profile if missing
-    await supabaseAdmin.from('profiles').insert({
+    const { error: profileCreateError } = await supabaseAdmin.from('profiles').insert({
       id: userId,
       name: 'Customer',
       email: null,
@@ -58,6 +62,10 @@ export async function POST(request: NextRequest) {
       location: 'HQ · Kitui',
       location_detail: 'DukaPlug HQ, Top Notch, Kitui',
     });
+    if (profileCreateError) {
+      console.error('Profile create error:', profileCreateError);
+      return NextResponse.json({ error: `Failed to create profile: ${profileCreateError.message}` }, { status: 500 });
+    }
   }
 
   const body = await request.json();
@@ -83,6 +91,7 @@ export async function POST(request: NextRequest) {
     .single();
 
   if (orderError) {
+    console.error('Order create error:', orderError);
     return NextResponse.json({ error: orderError.message }, { status: 500 });
   }
 
@@ -102,6 +111,7 @@ export async function POST(request: NextRequest) {
 
   if (itemsError) {
     await supabaseAdmin.from('orders').delete().eq('id', order.id);
+    console.error('Order items create error:', itemsError);
     return NextResponse.json({ error: itemsError.message }, { status: 500 });
   }
 

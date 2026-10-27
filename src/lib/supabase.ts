@@ -16,11 +16,27 @@ if (!supabaseServiceKey) {
   }
 }
 
-// Client-side Supabase client
-export const supabase = createClient(
-  supabaseUrl || 'https://placeholder.supabase.co',
-  supabaseAnonKey || 'placeholder-key'
-);
+// Singleton pattern to avoid multiple GoTrueClient instances
+let supabaseInstance: ReturnType<typeof createClient> | null = null;
+
+export function getSupabase() {
+  if (!supabaseInstance) {
+    supabaseInstance = createClient(
+      supabaseUrl || 'https://placeholder.supabase.co',
+      supabaseAnonKey || 'placeholder-key',
+      {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: true,
+        },
+      }
+    );
+  }
+  return supabaseInstance;
+}
+
+export const supabase = getSupabase();
 
 // Server-side Supabase client with service role key
 export const supabaseAdmin = createClient(

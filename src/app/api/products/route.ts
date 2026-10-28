@@ -21,6 +21,33 @@ export async function GET() {
       .order('created_at', { ascending: false });
 
     if (error) {
+      // If subcategory column doesn't exist, retry without it
+      if (error.code === '42703' || error.message?.includes('subcategory')) {
+        console.log('Subcategory column not found, retrying without it...');
+        const { data: fallbackData, error: fallbackError } = await supabaseAdmin
+          .from('products')
+          .select(`
+            id,
+            name,
+            description,
+            price,
+            category,
+            image_url,
+            is_available,
+            vendors (id, name, rating, location)
+          `)
+          .eq('is_available', true)
+          .order('created_at', { ascending: false });
+        
+        if (fallbackError) {
+          console.error('Supabase products error:', JSON.stringify(fallbackError, null, 2));
+          return NextResponse.json({ error: fallbackError.message, code: fallbackError.code, details: fallbackError }, { status: 500 });
+        }
+        
+        console.log('Products fetched (fallback):', fallbackData?.length || 0);
+        return NextResponse.json(fallbackData || []);
+      }
+      
       console.error('Supabase products error:', JSON.stringify(error, null, 2));
       return NextResponse.json({ error: error.message, code: error.code, details: error }, { status: 500 });
     }

@@ -54,7 +54,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
     const loadCart = async () => {
       try {
-        const { data, error } = await supabase
+        const { data, error } = await (supabase as any)
           .from('cart_items')
           .select('*, product:products(*, vendor:vendors(*))')
           .eq('user_id', user.id);
@@ -87,7 +87,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
     try {
       // Delete all existing cart items for this user, then insert new ones
-      const { error: deleteError } = await supabase
+      const { error: deleteError } = await (supabase as any)
         .from('cart_items')
         .delete()
         .eq('user_id', user.id);
@@ -101,7 +101,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
           quantity: item.quantity,
         }));
 
-        const { error: insertError } = await supabase
+        const { error: insertError } = await (supabase as any)
           .from('cart_items')
           .insert(rows);
 

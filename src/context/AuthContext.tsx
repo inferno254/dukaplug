@@ -41,7 +41,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         supabase.auth.getSession().then(async ({ data: { session } }) => {
           if (session?.user?.id === parsed.id) {
             // Refresh profile data (location may have changed)
-            const { data: profile } = await supabase
+            const { data: profile } = await (supabase as any)
               .from('profiles')
               .select('*')
               .eq('id', parsed.id)
@@ -89,7 +89,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (data.user) {
         // Fetch profile
-        const { data: profile } = await supabase
+        const { data: profile } = await (supabase as any)
           .from('profiles')
           .select('*')
           .eq('id', data.user.id)
@@ -128,7 +128,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (data.user) {
         // Create profile with default HQ location
-        await supabase.from('profiles').insert({
+        await (supabase as any).from('profiles').insert({
           id: data.user.id,
           name,
           email,
@@ -160,7 +160,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!user) return { error: 'Not authenticated' };
 
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('profiles')
         .update({ ...updates, updated_at: new Date().toISOString() })
         .eq('id', user.id)

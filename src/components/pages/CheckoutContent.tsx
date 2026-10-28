@@ -19,10 +19,11 @@ export default function CheckoutContent({ go }: { go: (p: string) => void }) {
   const [processing, setProcessing] = useState(false);
 
   const formatPhone = (p: string) => {
-    const cleaned = p.replace(/\s+/g, '').replace(/^\+/, '');
-    if (cleaned.startsWith('254')) return cleaned;
+    const cleaned = p.replace(/[\s+\-()]/g, '');
     if (cleaned.startsWith('0')) return `254${cleaned.slice(1)}`;
-    return `254${cleaned}`;
+    if (cleaned.startsWith('254')) return cleaned;
+    if (cleaned.length === 9) return `254${cleaned}`;
+    return cleaned;
   };
   const [orderId, setOrderId] = useState<string | null>(null);
   const [checkoutRequestId, setCheckoutRequestId] = useState<string | null>(null);

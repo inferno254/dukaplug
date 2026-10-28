@@ -47,7 +47,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Phone and amount are required' }, { status: 400 });
     }
 
-    const formattedPhone = phone.startsWith('254') ? phone : phone.startsWith('0') ? `254${phone.slice(1)}` : `254${phone}`;
+    // Normalize phone: remove spaces, dashes, +, ensure 254 prefix
+    let cleaned = phone.replace(/[\s+\-()]/g, '');
+    if (cleaned.startsWith('0')) {
+      cleaned = `254${cleaned.slice(1)}`;
+    } else if (cleaned.startsWith('254')) {
+      // already correct
+    } else if (cleaned.length === 9) {
+      cleaned = `254${cleaned}`;
+    }
+    const formattedPhone = cleaned;
+
+    if (!/^254\d{9}$/.test(formattedPhone)) {
+      return NextResponse.json({ error: 'Invalid phone number format. Use 07XXXXXXXX or 254XXXXXXXXX' }, { status: 400 });
+    }
     const timestamp = generateTimestamp();
     const password = generatePassword(timestamp);
     const accessToken = await getAccessToken();

@@ -76,6 +76,14 @@ export default function CheckoutContent({ go }: { go: (p: string) => void }) {
 
   const handlePay = async () => {
     if (items.length === 0) return;
+    
+    const formattedPhone = formatPhone(phone);
+    if (!formattedPhone || !/^254\d{9}$/.test(formattedPhone)) {
+      setErrorMsg('Please enter a valid phone number (e.g., 0712345678 or 254712345678)');
+      setStage('failed');
+      return;
+    }
+    
     setProcessing(true);
     setErrorMsg(null);
     setStage('paying');
@@ -94,7 +102,7 @@ export default function CheckoutContent({ go }: { go: (p: string) => void }) {
           deliveryAddress: location.detail,
           deliveryLocation: location.name,
           paymentMethod: 'mpesa',
-          phone: formatPhone(phone),
+          phone: formattedPhone,
           total,
         }),
       });
@@ -106,7 +114,6 @@ export default function CheckoutContent({ go }: { go: (p: string) => void }) {
       setOrderId(orderData.id);
 
       // Initiate STK Push
-      const formattedPhone = formatPhone(phone);
       const stkRes = await fetch('/api/mpesa/stkpush', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

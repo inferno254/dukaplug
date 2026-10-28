@@ -12,6 +12,7 @@ export async function GET() {
         description,
         price,
         category,
+        subcategory,
         image_url,
         is_available,
         vendors (id, name, rating, location)

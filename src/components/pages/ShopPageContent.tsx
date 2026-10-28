@@ -182,8 +182,8 @@ export default function ShopPageContent({ go }: { go: (p: string) => void }) {
   }
 
   // Filter products by subcategory (mock filtering - in real app would use subcategory field)
-  const filteredProducts = subcatInfo 
-    ? categoryProducts.slice(0, 8) // Show subset for demo
+const filteredProducts = subcatInfo  
+    ? categoryProducts.filter(p => p.subcategory === currentTabName).slice(0, 8) // Filter by subcategory
     : categoryProducts;
 
   if (loading) {

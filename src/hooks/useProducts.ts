@@ -8,6 +8,7 @@ export interface Product {
   description: string | null;
   price: number;
   category: string | null;
+  subcategory: string | null;
   image_url: string | null;
   is_available: boolean;
   vendor?: {

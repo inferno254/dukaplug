@@ -97,9 +97,9 @@ CREATE POLICY "Public read products" ON products
   FOR SELECT USING (is_available = true);
 
 -- Delivery zones public read
-DROP POLICY IF EXISTS "Public read delivery zones" ON delivery_zones;
-CREATE POLICY "Public read delivery zones" ON delivery_zones
-  FOR SELECT USING (true);
+-- DROP POLICY IF EXISTS "Public read delivery zones" ON delivery_zones;
+-- CREATE POLICY "Public read delivery zones" ON delivery_zones
+--   FOR SELECT USING (true);
 
 -- Rider tracking
 DROP POLICY IF EXISTS "Users can view own tracking" ON rider_tracking;
